@@ -1,5 +1,5 @@
 import AppScreen from "../screens/AppScreen"
-import { Settings, EditProfile, CommentPost } from '../screens/index'
+import { Settings, EditProfile, CommentPost, Messages } from '../screens/index'
 
 export default function (Stack: any) {
    return (
@@ -13,6 +13,9 @@ export default function (Stack: any) {
             popup: true,
          }} />
          <Stack.Screen name="CommentPost" component={CommentPost} options={{
+            animation: 'slide_from_right',
+         }} />
+         <Stack.Screen name="Messages" component={Messages} options={{
             animation: 'slide_from_right',
          }} />
       </>

@@ -27,7 +27,10 @@ const Routes = () => {
    return (
       <NavigationContainer>
          <Stack.Navigator screenOptions={screenOptions}>
-            { (auth.user && auth.access_token) ? AppStackScreen(Stack) : AuthStackScreen(Stack) }
+            {/* { (auth.user && auth.access_token) ? AppStackScreen(Stack) : AuthStackScreen(Stack) } */}
+            {
+               AppStackScreen(Stack)
+            }
          </Stack.Navigator>
       </NavigationContainer>
    )

@@ -7,9 +7,10 @@ import { useNavigation } from '@react-navigation/native'
 interface IProps {
    title: string,
    iconRight?: string
+   onPressIconRight?: () => void
 }
 
-const HeaderShowTitle: React.FC<IProps> = ({ title, iconRight }) => {
+const HeaderShowTitle: React.FC<IProps> = ({ title, iconRight, onPressIconRight }) => {
    const navigation = useNavigation<any>()
    return (
       <View style={styles.header}>
@@ -22,7 +23,7 @@ const HeaderShowTitle: React.FC<IProps> = ({ title, iconRight }) => {
          <Text style={styles.headerText}>{title}</Text>
          {
             iconRight && 
-            <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={styles.headerIcon} onPress={onPressIconRight}>
                <Icon
                   name={iconRight}
                   size={20}

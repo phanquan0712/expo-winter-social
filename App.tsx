@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import Routes from './src/navigations/Routes';
+import 'react-native-gesture-handler';
 import FlashMessage from "react-native-flash-message";
 import { Provider } from 'react-redux';
 import store from './src/redux/store';

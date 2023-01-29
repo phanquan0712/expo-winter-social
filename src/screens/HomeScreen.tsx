@@ -13,6 +13,7 @@ import PostCardItem from "../components/PostCardItem";
 import { getPost } from "../redux/actions/postAction";
 import Modal from "../components/Modal";
 import { useNavigation } from "@react-navigation/native";
+import Loading from "../components/Loading";
 const HomeScreen = () => {
   const { auth, post } = useSelector((state: RootStore) => state);
   const dispatch = useDispatch<any>();
@@ -86,13 +87,29 @@ const HomeScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <FlatList
-        data={post.posts}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <PostCardItem post={item} key={item._id} handleModal={handleModal} />
-        )}
-      />
+      {
+        post.load ? 
+        <Loading />
+        :
+        post.posts.length > 0 ?
+          <FlatList
+            data={post.posts}
+            keyExtractor={(item) => item._id}
+            renderItem={({ item }) => (
+              <PostCardItem post={item} key={item._id} handleModal={handleModal} />
+            )}
+          />
+          :
+          <Text style={{
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: '#000',
+            textAlign: 'center',
+            marginTop: 20
+          }}>
+            No Post
+          </Text>
+      }
       <Modal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}

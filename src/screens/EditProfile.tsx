@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput, Alert } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput, Alert, ScrollView } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootStore } from '../utils/TypeScript'
@@ -40,7 +40,7 @@ const EditProfile = () => {
    }
 
    return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
          <View style={styles.header}>
             <TouchableOpacity style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center' }}
                onPress={() => navigation.goBack()}
@@ -113,7 +113,7 @@ const EditProfile = () => {
                />
             </View>
          </View>
-      </View>
+      </ScrollView>
    )
 }
 

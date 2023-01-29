@@ -6,7 +6,13 @@ export const UN_FOLLOW = 'UN_FOLLOW';
 export const GET_POST_USER = 'GET_POST_USER';
 export const LOAD_USER_POST = 'LOAD_USER_POST';
 export const GET_ID = 'GET_ID';
+export const LOAD_USER = 'LOAD_USER';
 
+
+export interface ILoadUserType {
+   type: typeof LOAD_USER;
+   payload: boolean
+}
 
 export interface IGetIdType {
    type: typeof GET_ID;
@@ -54,14 +60,18 @@ export interface IStateType {
 }
 
 
-export interface IGetPostType {
-   type: typeof GET_POST_USER;
-   payload: {
-      posts: IPost[];
-      total: number;
-      page: number
-      _id: string
-   };
+export interface IGetPostStateType {
+   load: boolean
+   posts: IPost[];
+   total: number;
+   page: number
+   _id: string
 }
 
-export type IProfileType = IFollowType | IGetUserType | IUnFollowType | IGetPostType | ILoadUserPostType | IGetIdType
+
+export interface IGetPostType {
+   type: typeof GET_POST_USER;
+   payload:  IGetPostStateType
+}
+
+export type IProfileType = IFollowType | IGetUserType | IUnFollowType | IGetPostType | ILoadUserPostType | IGetIdType | IGetPostType | ILoadUserType

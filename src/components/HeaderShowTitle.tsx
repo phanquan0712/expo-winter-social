@@ -5,21 +5,26 @@ import { useNavigation } from '@react-navigation/native'
 
 
 interface IProps {
+   iconLeft?: boolean
    title: string,
    iconRight?: string
    onPressIconRight?: () => void
+   colorIconRight?: string
 }
 
-const HeaderShowTitle: React.FC<IProps> = ({ title, iconRight, onPressIconRight }) => {
+const HeaderShowTitle: React.FC<IProps> = ({ iconLeft, title, iconRight, onPressIconRight, colorIconRight }) => {
    const navigation = useNavigation<any>()
    return (
       <View style={styles.header}>
-         <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
-            <Icon
-               name="arrow-left"
-               size={20}
-            />
-         </TouchableOpacity>
+         {
+            !iconLeft &&
+            <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
+               <Icon
+                  name="arrow-left"
+                  size={20}
+               />
+            </TouchableOpacity>
+         }
          <Text style={styles.headerText}>{title}</Text>
          {
             iconRight && 
@@ -27,6 +32,7 @@ const HeaderShowTitle: React.FC<IProps> = ({ title, iconRight, onPressIconRight 
                <Icon
                   name={iconRight}
                   size={20}
+                  color={colorIconRight ? colorIconRight : '#000'}
                />
             </TouchableOpacity>
          }
@@ -42,6 +48,7 @@ const styles = StyleSheet.create({
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
+      backgroundColor: 'white'
    },
    headerIcon: {
       height: 50,
@@ -53,5 +60,6 @@ const styles = StyleSheet.create({
       flex: 1,
       fontSize: 18,
       fontWeight: '400',
+      paddingLeft: 10
    }
 })

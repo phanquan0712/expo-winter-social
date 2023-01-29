@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Animated, Easing, Alert } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Animated, Easing, ScrollView } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import InputCustom from '../components/InputCustom'
@@ -69,8 +69,8 @@ const LoginScreen = () => {
    }
 
    return (
-      <View style={{ flex: 1 , backgroundColor: 'white'}}>
-         <StatusBar style="light" />
+      <ScrollView style={{ flex: 1 , backgroundColor: 'white'}}>
+         <StatusBar style="auto" backgroundColor='transparent' />
          <LinearGradient
             colors={['#d8c4fc', '#bcc5fc', '#9dc6fc']}
             start={{ x: 0, y: 0 }}
@@ -123,7 +123,7 @@ const LoginScreen = () => {
                Dont't have an account? &nbsp;<Text onPress={() => navigation.navigate("SignUp")} style={{ color: '#a4c2f8' }}>Sign Up</Text>
             </Text>
          </View>
-      </View>
+      </ScrollView>
    )
 }
 
@@ -138,6 +138,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       padding: 36,
+      marginTop: 120,
       backgroundColor: 'rgba(255,255,255,0.3)',
    },
    other: {

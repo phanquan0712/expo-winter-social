@@ -1,17 +1,19 @@
-import { StyleSheet, Text, View, Image } from 'react-native'
+import { StyleSheet, Text, View, Image, Easing } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { HomeScreen, SearchScreen, AddScreen, NotificationScreen, ProfileScreen } from './index'
+import { HomeScreen, SearchScreen, NewPost_Step1Screen, NotificationScreen, ProfileScreen } from './index'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { useSelector } from 'react-redux'
 import { RootStore } from '../utils/TypeScript'
 const Tab = createBottomTabNavigator()
 import { useRoute,  useIsFocused } from '@react-navigation/native'
+
 const AppScreen = () => {
    const { auth } = useSelector((state: RootStore) => state)
    console.log(useIsFocused());
    const screenOptions = ({ route }: any) => ({
       headerShown: false,
+      gestureEnabled: true,
       tarBarBackgroundColor: '#fff',
       tabBarActiveTintColor: '#000',
       tabBarInactiveTintColor: '#d1cece',
@@ -25,7 +27,7 @@ const AppScreen = () => {
             iconName = 'home'
          } else if(route.name === 'Search') {
             iconName = 'search'
-         } else if(route.name === 'Add') {
+         } else if(route.name === 'NewPost_Step1Screen') {
             iconName = 'plus'
          } else if(route.name === 'Notification') {
             iconName = 'heart'
@@ -46,9 +48,10 @@ const AppScreen = () => {
 
    return (
       <Tab.Navigator screenOptions={screenOptions}>
-         <Tab.Screen name="Home" component={HomeScreen} />
+         <Tab.Screen name="Home" component={HomeScreen}
+         />
          <Tab.Screen name="Search" component={SearchScreen} />
-         <Tab.Screen name="Add" component={AddScreen} />
+         <Tab.Screen name="NewPost_Step1Screen" component={NewPost_Step1Screen} />
          <Tab.Screen name="Notification" component={NotificationScreen} />
          <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>

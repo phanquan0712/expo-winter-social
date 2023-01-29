@@ -71,7 +71,12 @@ export interface IGetPostStateType {
 
 export interface IGetPostType {
    type: typeof GET_POST_USER;
-   payload:  IGetPostStateType
+   payload:  {
+      posts: IPost[]
+      total: number
+      page: number
+      _id: string
+   }
 }
 
 export type IProfileType = IFollowType | IGetUserType | IUnFollowType | IGetPostType | ILoadUserPostType | IGetIdType | IGetPostType | ILoadUserType

@@ -15,7 +15,7 @@ const slides = [
       key: 2,
       title: 'Title 2',
       text: 'Other cool stuff',
-      image: require('../../assets/bg2.jpg'),
+      image: require('../../assets/bg3.jpg'),
       backgroundColor: '#febe29',
    },
    {

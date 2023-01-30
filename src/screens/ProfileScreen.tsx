@@ -174,11 +174,11 @@ const ProfileScreen = () => {
                keyExtractor={(item, index) => item._id.toString()}
                renderItem={({ item }) => (
                   <PeopleCardItem 
-                     key={item._id}
-                     id={item._id}
-                     avatar={item.avatar as string}
-                     name={item.fullname as string}
-                     handleDeleteDiscoverPeople={handleDeleteDiscoverPeople}
+                     // key={item._id}
+                     // id={item._id}
+                     // avatar={item.avatar as string}
+                     // name={item.fullname as string}
+                     // handleDeleteDiscoverPeople={handleDeleteDiscoverPeople}
                   />
                )}
                horizontal

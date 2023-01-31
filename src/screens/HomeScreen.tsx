@@ -79,8 +79,8 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Winter</Text>
-        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
-          <TouchableOpacity style={{  width: 40, alignItems: 'center', justifyContent: 'center'}}
+        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+          <TouchableOpacity style={{ width: 40, alignItems: 'center', justifyContent: 'center' }}
             onPress={() => navigation.navigate('Messages')}
           >
             <Icon name="facebook-messenger" size={20} color="#000" />
@@ -88,27 +88,31 @@ const HomeScreen = () => {
         </View>
       </View>
       {
-        post.load ? 
-        <Loading />
-        :
-        post.posts.length > 0 ?
-          <FlatList
-            data={post.posts}
-            keyExtractor={(item) => item._id}
-            renderItem={({ item }) => (
-              <PostCardItem post={item} key={item._id} handleModal={handleModal} />
-            )}
-          />
+        post.load ?
+          <Loading />
           :
-          <Text style={{
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: '#000',
-            textAlign: 'center',
-            marginTop: 20
-          }}>
-            No Post
-          </Text>
+          post.posts.length > 0 ?
+            <FlatList
+              data={post.posts}
+              keyExtractor={(item) => item._id}
+              renderItem={({ item }) => (
+                <PostCardItem
+                  post={item}
+                  key={item._id}
+                  handleModal={handleModal}
+                />
+              )}
+            />
+            :
+            <Text style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#000',
+              textAlign: 'center',
+              marginTop: 20
+            }}>
+              No Post
+            </Text>
       }
       <Modal
         modalVisible={modalVisible}

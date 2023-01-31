@@ -20,7 +20,7 @@ export const getPost = (token: string, limit: number = 1) => async (dispatch: Di
    }
 }
 
-export const likePost = (post: IPost, auth: IAuth,) => async(dispatch: Dispatch<IPostType>) => {
+export const likePost = (post: IPost, auth: IAuth) => async(dispatch: Dispatch<IPostType>) => {
    if(!auth.user) return ShowError('Please login to like this post')
    const newPost: IPost = {
       ...post, 

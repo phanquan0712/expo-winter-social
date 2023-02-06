@@ -2,12 +2,17 @@ import * as React from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, Animated, Easing, ScrollView, FlatList } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { useSelector, useDispatch } from 'react-redux'
-import { RootStore, IUser } from '../utils/TypeScript'
+import { RootStore, IUser, IPost } from '../utils/TypeScript'
 import ModalProfile from '../components/ModalProfile'
 import { useNavigation } from '@react-navigation/native'
 import { getDiscoverPeople } from '../redux/actions/discoverPeopleAction'
 import PeopleCardItem from '../components/PeopleCardItem'
 import Modal from '../components/Modal'
+import Loading from '../components/Loading'
+import ListPostProfileUser from '../components/ListPostProfileUser'
+import { getApi } from '../utils/fetchData'
+import { ShowError } from '../utils/ShowMessage'
+import { getProfileUser } from '../redux/actions/userAction'
 const ProfileScreen = () => {
    const navigation = useNavigation<any>()
    const dispatch = useDispatch<any>()
@@ -15,6 +20,10 @@ const ProfileScreen = () => {
    const [typePost, setTypePost] = React.useState<'post' | 'saved'>('post')
    const [modalVisible, setModalVisible] = React.useState(false)
    const [discoverPeopleList, setDiscoverPeopleList] = React.useState<IUser[]>(discoverPeople.users)
+   const [loadUserPost, setLoadUserPost] = React.useState<boolean>(false)
+   const [userPost, setUserPost] = React.useState<IPost[]>([])
+   const [loadUserSaved, setLoadUserSaved] = React.useState<boolean>(false)
+   const [userSaved, setUserSaved] = React.useState<IPost[]>([])
    const translateBarBot = React.useRef(new Animated.Value(0)).current
    const translateX1 = React.useRef(new Animated.Value(0)).current
    const translateX2 = React.useRef(new Animated.Value(0)).current
@@ -38,14 +47,45 @@ const ProfileScreen = () => {
       }
    ]
 
+
    React.useEffect(() => {
-      if(auth.access_token) {
+      if(auth.user?._id && auth.access_token) {
+         dispatch(getProfileUser(auth.user?._id, auth.access_token))
+      }
+   }, [auth.user?._id, auth.access_token])
+
+   React.useEffect(() => {
+      if(auth.user?._id && auth.access_token) {
+         if(typePost === 'post') {
+
+         } else {
+            const getUserSaved = async () => {
+               try {
+                  setLoadUserSaved(true)
+                  const res = await getApi(`saved_posts`, auth.access_token)
+                  if (res.status === 200) {
+                     setUserSaved(res.data.posts)
+                  }
+                  setLoadUserSaved(false)
+               } catch (err: any) {
+                  setLoadUserSaved(false)
+                  return ShowError(err.response.data.msg)
+               }
+            }
+            getUserSaved()
+         }
+      }
+   }, [auth.access_token, auth.user?._id, typePost])
+
+
+   React.useEffect(() => {
+      if (auth.access_token) {
          dispatch(getDiscoverPeople(auth.access_token))
       }
    }, [auth.access_token, dispatch])
 
    React.useEffect(() => {
-      if(discoverPeople.users.length > 0) {
+      if (discoverPeople.users.length > 0) {
          setDiscoverPeopleList(discoverPeople.users)
       }
    }, [discoverPeople.users])
@@ -57,7 +97,7 @@ const ProfileScreen = () => {
       }
    }, [navigation, modalVisible])
 
-   
+
    React.useEffect(() => {
       Animated.timing(translateBarBot, {
          toValue: typePost === 'post' ? 0 : Dimensions.get('window').width / 2,
@@ -66,8 +106,8 @@ const ProfileScreen = () => {
          easing: Easing.elastic(0.8),
       }).start()
    }, [typePost])
-   
-   
+
+
    React.useEffect(() => {
       Animated.timing(translateX1, {
          toValue: typePost === 'post' ? 0 : -Dimensions.get('window').width,
@@ -76,7 +116,7 @@ const ProfileScreen = () => {
          easing: Easing.elastic(0.8),
       }).start()
    }, [typePost])
-   
+
    React.useEffect(() => {
       Animated.timing(translateX2, {
          toValue: typePost === 'saved' ? 0 : Dimensions.get('window').width,
@@ -85,7 +125,7 @@ const ProfileScreen = () => {
          easing: Easing.elastic(0.8),
       }).start()
    }, [typePost])
-   
+
    const handleOpenModal = () => {
       if (!modalVisible) {
          setModalVisible(true)
@@ -113,7 +153,7 @@ const ProfileScreen = () => {
    }
 
 
-   
+
 
    return (
       <View style={[styles.container]}>
@@ -139,7 +179,7 @@ const ProfileScreen = () => {
                </TouchableOpacity>
             </View>
          </View>
-         <ScrollView style={{ flexGrow: 1, backgroundColor: 'white'}}>
+         <ScrollView style={{ flexGrow: 1, backgroundColor: 'white' }}>
             <View style={{ padding: 20, backgroundColor: 'white' }}>
                <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10 }}>
                   <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', marginRight: 20, alignItems: 'center' }}>
@@ -173,16 +213,16 @@ const ProfileScreen = () => {
                data={discoverPeopleList}
                keyExtractor={(item, index) => item._id.toString()}
                renderItem={({ item }) => (
-                  <PeopleCardItem 
-                     // key={item._id}
-                     // id={item._id}
-                     // avatar={item.avatar as string}
-                     // name={item.fullname as string}
-                     // handleDeleteDiscoverPeople={handleDeleteDiscoverPeople}
+                  <PeopleCardItem
+                     key={item._id}
+                     id={item._id}
+                     avatar={item.avatar as string}
+                     name={item.username as string}
+                     handleDeleteDiscoverPeople={handleDeleteDiscoverPeople}
                   />
                )}
                horizontal
-               style={{ backgroundColor: 'white', marginVertical: 10}}
+               style={{ backgroundColor: 'white', marginVertical: 10 }}
                showsHorizontalScrollIndicator={false}
             />
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', backgroundColor: 'white' }}>
@@ -225,18 +265,42 @@ const ProfileScreen = () => {
                />
             </View>
             <Animated.View style={[typePost === 'post' ? styles.profilePostActive : styles.profilePost, translateXPost]}>
-               <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>Profile</Text>
-               <Text style={{ fontSize: 16, fontWeight: '300', textAlign: 'center' }}>
-                  When you share photos and videos they'll appear on your profile.
-               </Text>
+               {
+                  loadUserPost ?
+                     <Loading />
+                     :
+                     userPost.length > 0 ?
+                        <ListPostProfileUser
+                           posts={userPost}
+                        />
+                        :
+                        <>
+                           <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>Profile</Text>
+                           <Text style={{ fontSize: 16, fontWeight: '300', textAlign: 'center' }}>
+                              When you share photos and videos they'll appear on your profile.
+                           </Text>
+                        </>
+               }
             </Animated.View>
             <Animated.View style={[typePost === 'saved' ? styles.profilePostActive : styles.profilePost, translateXSaved]}>
-               <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>
-                  Photo and videos of you
-               </Text>
-               <Text style={{ fontSize: 16, fontWeight: '300', textAlign: 'center' }}>
-                  When people tag you in photos and videos they'll appear here.
-               </Text>
+               {
+                  loadUserSaved ?
+                     <Loading />
+                     :
+                     userPost.length > 0 ?
+                        <ListPostProfileUser
+                           posts={userSaved}
+                        />
+                        :
+                        <>
+                           <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>
+                              Photo and videos of you
+                           </Text>
+                           <Text style={{ fontSize: 16, fontWeight: '300', textAlign: 'center' }}>
+                              When people tag you in photos and videos they'll appear here.
+                           </Text>
+                        </>
+               }
             </Animated.View>
          </ScrollView>
          <Modal

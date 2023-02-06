@@ -6,16 +6,13 @@ import { getApi, patchApi } from '../../utils/fetchData';
 import { imageUpload, checkImage } from '../../utils/imageUpload';
 import { IAuth } from './../types/authType';
 import { IPost, IUser } from '../../utils/Typescript';
-import { ShowError } from 'src/utils/ShowMessage';
+import { ShowError } from '../../utils/ShowMessage';
 
 export const getProfileUser = (id: string, token?: string) => {
    return async (dispatch: Dispatch<IProfileType>) => {
       try {
-         const resUser = await getApi(`user/${id}`, token);
          dispatch({ type: LOAD_USER, payload: true })
-         const resPost = await getApi(`   /${id}`, token)
-
-         dispatch({ type: GET_USER, payload: resUser.data.user });
+         const resPost = await getApi(`user_posts/${id}`, token)
          dispatch({ type: GET_POST_USER, payload: { total: resPost.data.total, posts: (resPost.data.posts as IPost[]), page: 2, _id: id } });
          dispatch({ type: LOAD_USER, payload: false })
       } catch (err: any) {

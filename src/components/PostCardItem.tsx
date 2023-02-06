@@ -10,7 +10,7 @@ import { likePost, unLikePost } from '../redux/actions/postAction';
 import { useNavigation } from '@react-navigation/core';
 interface IProps {
    post: IPost
-   handleModal: (post: IPost) => void
+   handleModal?: (post: IPost) => void
 }
 const PostCardItem: React.FC<IProps> = ({ post, handleModal }) => {
    const { auth } = useSelector((state: any) => state)

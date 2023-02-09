@@ -5,6 +5,9 @@ import 'react-native-gesture-handler';
 import FlashMessage from "react-native-flash-message";
 import { Provider } from 'react-redux';
 import store from './src/redux/store';
+import { LogBox } from "react-native"
+
+LogBox.ignoreAllLogs(true)
 export default function App() {
   return (
     <Provider store={store}>

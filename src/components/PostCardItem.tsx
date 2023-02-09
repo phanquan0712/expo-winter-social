@@ -114,7 +114,7 @@ const PostCardItem: React.FC<IProps> = ({ post, handleModal }) => {
                      }
                   </TouchableOpacity>
                   <TouchableOpacity 
-                     onPress={() => navigation.navigate('CommentPost', {post})}
+                     onPress={() => navigation.navigate('CommentPost', { id: post._id})}
                   >
                      <Icon
                         name='comment'
@@ -169,7 +169,9 @@ const PostCardItem: React.FC<IProps> = ({ post, handleModal }) => {
                {
                   post.comments &&
                   post.comments?.length > 0 &&
-                  <Text style={{ fontSize: 16, fontWeight: '400', color: '#999' }}>View all {post.comments?.length} comments</Text>
+                  <Text
+                     onPress={() => navigation.navigate('CommentPost', { id: post._id })}
+                  style={{ fontSize: 16, fontWeight: '400', color: '#999' }}>View all {post.comments?.length} comments</Text>
                }
                <Text style={{ fontSize: 14, fontWeight: '400', color: '#999' }}>
                   {moment(post.createdAt).fromNow()}

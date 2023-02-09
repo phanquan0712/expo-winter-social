@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput, Alert, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput, Alert, ScrollView, ActivityIndicator } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootStore } from '../utils/TypeScript'
@@ -33,7 +33,6 @@ const EditProfile = () => {
    const updateProfile = () => {
       try {
          dispatch(updateUser(newUser, auth.access_token))
-         return navigation.goBack()
       } catch (err: any) {
          Alert.alert('Error', err.response.data.msg)
       }
@@ -54,11 +53,16 @@ const EditProfile = () => {
             <TouchableOpacity style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center' }}
                onPress={updateProfile}
             >
-               <Icon
-                  name='check'
-                  size={25}
-                  color={'#0095f6'}
-               />
+               {
+                  auth.load ?
+                  <ActivityIndicator size="small" color="#666" />
+                     :
+                     <Icon
+                        name='check'
+                        size={25}
+                        color={'#0095f6'}
+                     />
+               }
             </TouchableOpacity>
          </View>
          <View>
@@ -107,8 +111,8 @@ const EditProfile = () => {
                <TextInput
                   value={newUser?.story}
                   numberOfLines={5}
-                  multiline = {true}
-                  style={{ paddingVertical: 5, fontSize: 16, color: '#000', padding: 5, textAlignVertical: 'top', width: '100%'}}
+                  multiline={true}
+                  style={{ paddingVertical: 5, fontSize: 16, color: '#000', padding: 5, textAlignVertical: 'top', width: '100%' }}
                   onChangeText={(text) => setNewUser({ ...newUser, story: text })}
                />
             </View>

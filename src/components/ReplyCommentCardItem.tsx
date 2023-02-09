@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { RootStore } from '../utils/TypeScript';
 import { likeComment, unLikeComment } from '../redux/actions/commentAction';
-import ReplyCommentCardItem from './ReplyCommentCardItem';
 import { TAG_ANSWER_COMMENT } from '../redux/types/commentType';
 interface IProps {
    comment: IComment
@@ -46,10 +45,6 @@ const CommentCardItem: React.FC<IProps> = ({ comment, post }) => {
       }
    }
 
-   const handleRepyComment = () => {
-      dispatch({ type: TAG_ANSWER_COMMENT, payload: comment})
-   }
-
 
    return (
       <View style={styles.contentPost}>
@@ -80,11 +75,6 @@ const CommentCardItem: React.FC<IProps> = ({ comment, post }) => {
                         comment.likes?.length > 0 &&
                         <Text style={{ fontSize: 12, fontWeight: '500', color: '#444', marginRight: 10 }}>{comment.likes?.length} likes</Text>
                      }
-                     <TouchableOpacity
-                        onPress={handleRepyComment}
-                     >
-                        <Text style={{ fontSize: 12, fontWeight: '500', color: '#444' }}>Reply</Text>
-                     </TouchableOpacity>
                   </View>
                </View>
                <TouchableOpacity onPress={handleLikeComment}>
@@ -104,16 +94,7 @@ const CommentCardItem: React.FC<IProps> = ({ comment, post }) => {
                   }
                </TouchableOpacity>
             </View>
-               {
-                  comment.reply?.length > 0 && 
-                  comment.reply?.map((item) => (
-                     <ReplyCommentCardItem 
-                        key={item._id}
-                        comment={item}
-                        post={post}
-                        />
-                  ))
-               }
+               
          </View>
       </View>
    )
@@ -125,9 +106,8 @@ const styles = StyleSheet.create({
    contentPost: {
       display: 'flex',
       flexDirection: 'row',
-      alignItems: 'flex-start',
-      paddingHorizontal: 20,
-      marginVertical: 15
+      alignItems: 'center',
+      marginTop: 10
    },
    heartActive: {
       tintColor: 'red',

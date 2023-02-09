@@ -1,4 +1,4 @@
-import { IAuthType , AUTH, LOGOUT, IUpdateUser, UPDATE_USER} from './../types/authType';
+import { IAuthType , AUTH, LOGOUT, IUpdateUser, UPDATE_USER, ILoadAuthType, LOAD_AUTH} from './../types/authType';
 import { ILoginUser, IRegisterUser, IUser } from '../../utils/Typescript';
 import { Dispatch } from 'react';
 import { ShowError, ShowSuccess } from '../../utils/ShowMessage';
@@ -62,9 +62,10 @@ export const logout = () => async(dispatch: Dispatch<IAuthType  | any>) => {
    }
 }
 
-export const updateUser = (data: IUser, token: string) => async(dispatch: Dispatch<IUpdateUser>) => {
+export const updateUser = (data: IUser, token: string) => async(dispatch: Dispatch<IUpdateUser | ILoadAuthType>) => {
    let url: string = ''
    try {
+      dispatch({ type: LOAD_AUTH, payload: true})
       if(data.avatar) {
          const check = checkImage(data.avatar as File)
          if(check) {
@@ -80,6 +81,7 @@ export const updateUser = (data: IUser, token: string) => async(dispatch: Dispat
          type: UPDATE_USER,
          payload: newData,
       })
+      dispatch({ type: LOAD_AUTH, payload: false})
       return ShowSuccess(res.data.msg);
    } catch(err: any) {
       return ShowError(err.response.data.msg)

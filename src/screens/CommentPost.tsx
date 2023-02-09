@@ -3,94 +3,123 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, ScrollView,
 import HeaderShowTitle from './../components/HeaderShowTitle';
 import { IComment, IPost } from '../utils/TypeScript';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootStore } from '../utils/TypeScript';
-import { useRoute } from '@react-navigation/native';
+import { RootStore, IUser } from '../utils/TypeScript';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import CommentCardItem from '../components/CommentCardItem';
+import InputComment from '../components/InputComment';
+import { getDetailPost } from '../redux/actions/postDetailAction';
+import Loading from '../components/Loading';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import { ICommentType, TAG_ANSWER_COMMENT } from '../redux/types/commentType';
 const CommentPost = () => {
-   const { auth } = useSelector((state: RootStore) => state)
-   const { post } = useRoute<any>().params   
+   const { auth, postDetail, commentTag } = useSelector((state: RootStore) => state)
+   const { id } = useRoute<any>().params
+   const dispatch = useDispatch<any>()
+   const navigation = useNavigation<any>()
    const [writeComment, setWriteComment] = React.useState<string>('')
+   React.useEffect(() => {
+      if (id) {
+         dispatch(getDetailPost(id, auth.access_token))
+      }
+   }, [id, dispatch, auth.access_token])
 
-   const listIcon = ["🙂","😀","😄","😆","😅","😂","🤣","😊","😌","😉","😏","😍","😘","😗","😙","😚","🤗","😳","🙃","😇","😈","😛","😝","😜",'😋','🤤',"🤓", "😎", '🤑', "😠", "😡", "💩", "🎃", "👿", "👍", "👎","🤞", "👩", "💂", "👳", "👊", "✊","🙌","🖖","👂", "👃", "👁️️","🎖️️", "🏆️", "🎧️", "🥈️", "🥇️", "🏅"]
+
+   const handleNavigation = () => {
+      if (commentTag.user) {
+         dispatch({ type: TAG_ANSWER_COMMENT, payload: {} as IComment })
+      }
+      return navigation.goBack()
+   }
+
    return (
       <View style={styles.container}>
-         <HeaderShowTitle title="Comments" iconRight='paper-plane' />
-         <ScrollView style={{ flex: 1}}>
-            <View style={styles.contentPost}>
-               <TouchableOpacity>
-                  <Image
-                     source={{ uri: post.user?.avatar as string }}
-                     style={{
-                        width: 35,
-                        height: 35,
-                        borderRadius: 35,
-                        borderColor: '#000',
-                        borderWidth: 1,
-                        marginRight: 10
-                     }}
-                  />
-               </TouchableOpacity>
-               <View style={{ flex: 1}}>
-                  <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start', marginBottom: 10}}>
-                     <Text style={{ fontSize: 14, fontWeight: 'bold', marginRight: 10 }}>{post.user?.username as string}</Text>
-                     <Text style={{ fontSize: 14, fontWeight: '400', width: '100%' }}>{post.content}</Text>
-                  </View>
-                  <Text style={{ fontSize: 12, fontWeight: '500', color: '#444'}}>{moment(new Date(post.createdAt)).fromNow()}</Text>
-               </View>
-            </View>
-            <View style={{ paddingVertical: 15}}>
-               {
-                  (post.comments as IComment[])?.map((comment, index) => (
-                     <CommentCardItem key={index + 1} comment={comment} post={post} />
-                  ))
-               }
-            </View>
-         </ScrollView>
-         <View style={styles.inputComment}>
-            <View style={{ height: 50, width: '100%', borderBottomColor: '#ddd', borderBottomWidth: 1, borderTopColor: '#ddd', borderTopWidth: 1 }}>
-               <FlatList 
-                  data={listIcon}
-                  keyExtractor={(item, index) => index.toString()}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  renderItem={({ item }) => (
-                     <TouchableOpacity style={{ height: 50, width: 50, justifyContent: 'center', alignItems: 'center' }}
-                        onPress={() => setWriteComment(writeComment + item)}
-                     >
-                        <Text style={{ fontSize: 20 }}>{item}</Text>
-                     </TouchableOpacity>
-                  )}
+         <View style={{
+            height: 40,
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingHorizontal: 20
+         }}>
+            <TouchableOpacity
+               onPress={handleNavigation}
+            >
+               <Icon
+                  name='arrow-left'
+                  size={20}
+                  color='#000'
                />
-            </View>
-            <View style={{ height: 50, width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-               <TouchableOpacity style={{ height: 50, width: 50, justifyContent: 'center', alignItems: 'center' }}>
-                  <Image
-                     source={{ uri: auth.user?.avatar }}
-                     style={{
-                        width: 35,
-                        height: 35,
-                        borderRadius: 35,
-                     }}
-                  />
-               </TouchableOpacity>
-               <TextInput
-                  style={{ flex: 1 }}
-                  placeholder='Add a comment...'
-                  placeholderTextColor={'#666'}
-                  value={writeComment}
-                  onChangeText={text => setWriteComment(text)}
+            </TouchableOpacity>
+            <Text style={{ fontSize: 18, fontWeight: '500', paddingHorizontal: 20, flex: 1 }}>Comments</Text>
+            <TouchableOpacity>
+               <Icon
+                  name='paper-plane'
+                  size={20}
+                  color='#000'
                />
-               <TouchableOpacity style={{ height: 50, width: 50, justifyContent: 'center', alignItems: 'center' }}>
-                  <Text style={{
-                     color: '#0095f6',
-                     fontSize: 14,
-                     fontWeight: 'bold',
-                     opacity: writeComment ? 1 : 0.3
-                  }}>Post</Text>
-               </TouchableOpacity>
-            </View>
+            </TouchableOpacity>
          </View>
+         <ScrollView style={{ flex: 1 }}>
+            {
+               postDetail.isLoad ?
+                  <Loading />
+                  :
+                  <>
+                     <View style={styles.contentPost}>
+                        <TouchableOpacity>
+                           <Image
+                              source={{ uri: postDetail.post?.user?.avatar as string }}
+                              style={{
+                                 width: 35,
+                                 height: 35,
+                                 borderRadius: 35,
+                                 borderColor: '#000',
+                                 borderWidth: 1,
+                                 marginRight: 10
+                              }}
+                           />
+                        </TouchableOpacity>
+                        <View style={{ flex: 1 }}>
+                           <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start', marginBottom: 10 }}>
+                              <Text style={{ fontSize: 14, fontWeight: 'bold', marginRight: 10 }}>{postDetail.post.user?.username as string}</Text>
+                              <Text style={{ fontSize: 14, fontWeight: '400', width: '100%' }}>{postDetail.post.content}</Text>
+                           </View>
+                           <Text style={{ fontSize: 12, fontWeight: '500', color: '#444' }}>{moment(new Date(postDetail.post.createdAt)).fromNow()}</Text>
+                        </View>
+                     </View>
+                     <View style={{ paddingVertical: 15 }}>
+                        {
+                           (postDetail.post.comments as IComment[])?.length > 0 ?
+                              (postDetail.post.comments as IComment[])?.map((comment, index) => (
+                                 <CommentCardItem
+                                    key={index + 1}
+                                    comment={comment}
+                                    post={postDetail.post} />
+                              ))
+                              :
+                              <>
+                                 <Text style={{ textAlign: 'center', fontSize: 16, fontWeight: '500', color: '#333' }}>No comments</Text>
+                                 <Text
+                                    style={{
+                                       textAlign: 'center',
+                                       fontSize: 14,
+                                       fontWeight: '400',
+                                       color: '#444'
+                                    }}
+                                 >
+                                    Be the first to comment
+                                 </Text>
+                              </>
+                        }
+                     </View>
+                  </>
+            }
+         </ScrollView>
+         <InputComment
+            writeComment={writeComment}
+            setWriteComment={setWriteComment}
+            post={postDetail.post}
+         />
       </View>
    )
 }

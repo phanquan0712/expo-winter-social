@@ -9,6 +9,7 @@ export const LIKE_POST = 'LIKE_POST';
 export const UN_LIKE_POST = 'UN_LIKE_POST';
 export const GET_DETAIL_POST = 'GET_DETAIL_POST';
 export const POST_LOAD = 'POST_LOAD';
+export const POST_LOAD_MORE = 'POST_LOAD_MORE';
 export const DELETE_POST = 'DELETE_POST';
 
 
@@ -19,6 +20,7 @@ export interface ICreatePostType  {
 
 export interface IStatePost {
    load: boolean
+   isLoadMore: boolean
    posts: IPost[]
    total: number
    page: number
@@ -27,6 +29,11 @@ export interface IStatePost {
 
 export interface IPostLoadType {
    type: typeof POST_LOAD;
+   payload: boolean;
+}
+
+export interface IPostLoadMoreType {
+   type: typeof POST_LOAD_MORE;
    payload: boolean;
 }
 
@@ -63,4 +70,4 @@ export interface IDeletePostType {
    payload: IPost
 }
 
-export type IPostType =IDeletePostType | ICreatePostType | IGetPostType | IUpdatePostType | ILikePostType | IUnLikePostType | IGetDetailPostType | IPostLoadType;
+export type IPostType =IDeletePostType | ICreatePostType | IGetPostType | IUpdatePostType | ILikePostType | IUnLikePostType | IGetDetailPostType | IPostLoadType | IPostLoadMoreType;

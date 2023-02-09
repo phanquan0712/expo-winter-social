@@ -1,6 +1,7 @@
-import { AUTH, IAuth, IAuthType, LOGOUT, UPDATE_USER, IUpdateUser, AuthType } from "../types/authType";
+import { AUTH, IAuth, IAuthType, LOGOUT, UPDATE_USER, IUpdateUser, AuthType, LOAD_AUTH } from "../types/authType";
 import { IUser } from "../../utils/TypeScript";
 const initialState: AuthType = {
+   load: false,
    user: {} as IUser,
    access_token: "",
    msg: "",
@@ -8,6 +9,11 @@ const initialState: AuthType = {
 
 const authReducer = (state: IAuth = initialState, action: IAuthType | IUpdateUser | any) => {
    switch (action.type) {
+      case LOAD_AUTH:
+         return {
+            ...state,
+            load: action.payload
+         }
       case AUTH:
          return action.payload
       case LOGOUT: 

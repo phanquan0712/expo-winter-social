@@ -20,8 +20,7 @@ const ProfileScreen = () => {
    const [typePost, setTypePost] = React.useState<'post' | 'saved'>('post')
    const [modalVisible, setModalVisible] = React.useState(false)
    const [discoverPeopleList, setDiscoverPeopleList] = React.useState<IUser[]>(discoverPeople.users)
-   const [loadUserPost, setLoadUserPost] = React.useState<boolean>(false)
-   const [userPost, setUserPost] = React.useState<IPost[]>([])
+   const [userPost, ] = React.useState<IPost[]>([])
    const [loadUserSaved, setLoadUserSaved] = React.useState<boolean>(false)
    const [userSaved, setUserSaved] = React.useState<IPost[]>([])
    const translateBarBot = React.useRef(new Animated.Value(0)).current
@@ -209,22 +208,24 @@ const ProfileScreen = () => {
                   <Text style={styles.textBtnEdit}>Edit Profile</Text>
                </TouchableOpacity>
             </View>
-            <FlatList
-               data={discoverPeopleList}
-               keyExtractor={(item, index) => item._id.toString()}
-               renderItem={({ item }) => (
-                  <PeopleCardItem
-                     key={item._id}
-                     id={item._id}
-                     avatar={item.avatar as string}
-                     name={item.username as string}
-                     handleDeleteDiscoverPeople={handleDeleteDiscoverPeople}
+            {
+               discoverPeople.load ?
+               <Loading />
+               :
+                  <FlatList
+                     data={discoverPeopleList}
+                     keyExtractor={(item, index) => item._id.toString()}
+                     renderItem={({ item }) => (
+                        <PeopleCardItem
+                           key={item._id}
+                           user={item}
+                        />
+                     )}
+                     horizontal
+                     style={{ backgroundColor: 'white', marginVertical: 10 }}
+                     showsHorizontalScrollIndicator={false}
                   />
-               )}
-               horizontal
-               style={{ backgroundColor: 'white', marginVertical: 10 }}
-               showsHorizontalScrollIndicator={false}
-            />
+            }
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', backgroundColor: 'white' }}>
                <TouchableOpacity style={{
                   flex: 1, alignItems: 'center', justifyContent: 'center',
@@ -265,13 +266,13 @@ const ProfileScreen = () => {
                />
             </View>
             <Animated.View style={[typePost === 'post' ? styles.profilePostActive : styles.profilePost, translateXPost]}>
-               {
-                  loadUserPost ?
+               {/* {
+                  user.load ?
                      <Loading />
                      :
-                     userPost.length > 0 ?
+                     user.posts?.length > 0 ?
                         <ListPostProfileUser
-                           posts={userPost}
+                           posts={user.posts}
                         />
                         :
                         <>
@@ -280,7 +281,7 @@ const ProfileScreen = () => {
                               When you share photos and videos they'll appear on your profile.
                            </Text>
                         </>
-               }
+               } */}
             </Animated.View>
             <Animated.View style={[typePost === 'saved' ? styles.profilePostActive : styles.profilePost, translateXSaved]}>
                {

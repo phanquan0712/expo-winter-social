@@ -41,8 +41,8 @@ export interface IUser {
    mobile: string
    address: string
    story: string
-   followers: string[]
-   following: string[]
+   followers: IUser[]
+   following: IUser[]
    saved: string[]
    createdAt: string
    updatedAt: string

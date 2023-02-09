@@ -7,6 +7,7 @@ import postDetailReducer from "./postDetailReducer";
 import userReducer from "./userReducer";
 import notifyReducer from "./notifiesReducer";
 import messageReducer from "./messageReducer";
+import tagAnswerCommentReducer from "./tagAnswerComment";
 export default combineReducers({
    auth: authReducer,
    discoverPeople: discoverPeopleReducer,
@@ -15,5 +16,6 @@ export default combineReducers({
    postDetail: postDetailReducer,
    user: userReducer,
    notify: notifyReducer,
-   message: messageReducer
+   message: messageReducer,
+   commentTag: tagAnswerCommentReducer,
 })

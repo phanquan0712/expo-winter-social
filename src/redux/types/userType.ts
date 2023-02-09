@@ -4,6 +4,7 @@ export const UPDATE_USER = 'UPDATE_USER';
 export const FOLLOW = 'FOLLOW';
 export const UN_FOLLOW = 'UN_FOLLOW';
 export const GET_POST_USER = 'GET_POST_USER';
+export const GET_SAVED_POST = 'GET_SAVED_POST';
 export const LOAD_USER_POST = 'LOAD_USER_POST';
 export const GET_ID = 'GET_ID';
 export const LOAD_USER = 'LOAD_USER';
@@ -61,22 +62,22 @@ export interface IStateType {
 
 
 export interface IGetPostStateType {
+   user: IUser
    load: boolean
    posts: IPost[];
-   total: number;
-   page: number
-   _id: string
+   saved: IPost[];
 }
+
 
 
 export interface IGetPostType {
    type: typeof GET_POST_USER;
-   payload:  {
-      posts: IPost[]
-      total: number
-      page: number
-      _id: string
-   }
+   payload:  IPost[]
 }
 
-export type IProfileType = IFollowType | IGetUserType | IUnFollowType | IGetPostType | ILoadUserPostType | IGetIdType | IGetPostType | ILoadUserType
+export interface IGetSavedPostType {
+   type: typeof GET_SAVED_POST;
+   payload:  IPost[]
+}
+
+export type IProfileType = IFollowType | IGetUserType | IUnFollowType | IGetPostType | ILoadUserPostType | IGetIdType | IGetPostType | ILoadUserType | IGetSavedPostType

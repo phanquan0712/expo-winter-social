@@ -14,7 +14,7 @@ const FollowButton: React.FC<IProps> = ({ user }) => {
    const [isFollow, setIsFollow] = React.useState<boolean>(false)
 
    React.useEffect(() => {
-      if(user.followers.find(item => item._id === auth.user._id))
+      if(user.followers?.find(item => item._id === auth.user?._id))
          setIsFollow(true)
    }, [auth.user, user])
 

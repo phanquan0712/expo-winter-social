@@ -6,6 +6,10 @@ import { ShowError } from "../../utils/ShowMessage";
 import { patchApi, postApi } from "../../utils/fetchData"
 import  { ICommentType } from "../types/commentType";
 import { IGetDetailPostType, GET_POST_DETAIL, GET_POST_DETAIL_LOADING   } from "../types/postDetailType";
+import { Socket } from "socket.io-client";
+import { createNotify } from "./notifiesAction";
+
+
 export const likeComment = (post: IPost, comment: IComment, auth: IAuth) => async(dispatch: Dispatch<IPostType | IGetDetailPostType>) => {
    try {
       await patchApi(`comment/${comment._id}/like`, {}, auth.access_token)
@@ -43,7 +47,7 @@ export const unLikeComment = (post: IPost, comment: IComment, auth: IAuth) => as
    }
 }
 
-export const createComment = (post: IPost, comment: IComment, auth: IAuth) => async (dispatch: Dispatch<ICommentType | IGetDetailPostType>) => {
+export const createComment = (post: IPost, comment: IComment, auth: IAuth, socket: Socket) => async (dispatch: Dispatch<ICommentType | IGetDetailPostType>) => {
    try {
       const res = await postApi('comment', {
          postId: post._id,
@@ -55,6 +59,16 @@ export const createComment = (post: IPost, comment: IComment, auth: IAuth) => as
       const newData = {...res.data.newComment, user: auth.user}
       const newPost = { ...post, comments: [...CommentPost, newData] };
       dispatch({ type: GET_POST_DETAIL, payload: newPost })
+      socket.emit('createComment', newPost)
+      const msg = {
+         id: res.data.newComment._id,
+         text: 'has commented on your post',
+         recipients: [post.user],
+         url: `/posts/${post._id}`,
+         content: post.content,
+         image: post.images[0].url
+      }
+      dispatch((createNotify(msg, auth, socket) as any))
    } catch (err: any) {
       return ShowError(err.response.data.msg)
    }

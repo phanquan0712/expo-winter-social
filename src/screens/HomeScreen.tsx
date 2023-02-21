@@ -5,7 +5,8 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  SafeAreaView
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useSelector, useDispatch } from "react-redux";
@@ -16,6 +17,7 @@ import Modal from "../components/Modal";
 import { useNavigation } from "@react-navigation/native";
 import Loading from "../components/Loading";
 import { getApi } from '../utils/fetchData'
+import * as Notifications from 'expo-notifications'
 const HomeScreen = () => {
   const { auth, post } = useSelector((state: RootStore) => state);
   const dispatch = useDispatch<any>();
@@ -84,13 +86,14 @@ const HomeScreen = () => {
     setPage(page + 1)
   }
 
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Winter</Text>
         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
           <TouchableOpacity style={{ width: 40, alignItems: 'center', justifyContent: 'center' }}
-            onPress={() => navigation.navigate('Messages')}
+            onPress={() => navigation.navigate('ConverstationsScreen')}
           >
             <Icon name="facebook-messenger" size={20} color="#000" />
           </TouchableOpacity>
@@ -158,7 +161,7 @@ const HomeScreen = () => {
         setModalVisible={setModalVisible}
         data={listOptions}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

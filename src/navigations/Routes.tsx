@@ -7,6 +7,10 @@ import { useSelector, useDispatch } from "react-redux"
 import { RootStore } from "../utils/TypeScript"
 import { refreshToken } from "../redux/actions/authAction"
 import { Easing } from 'react-native';
+import io from "socket.io-client"
+import { SOCKET } from "../redux/types/socketType";
+import { API_URL } from '../utils/config'
+import SocketClient from '../../SocketClient'
 const Stack = createStackNavigator()
 
 
@@ -14,11 +18,20 @@ const Routes = () => {
    const { auth } = useSelector((state: RootStore) => state)
    const dispatch = useDispatch<any>()
 
+
    useEffect(() => {
-      dispatch(refreshToken())
-   }, [dispatch])
+      dispatch(refreshToken());
+      const socket = io(API_URL)
+      dispatch({ type: SOCKET, payload: socket })
+      return () => {socket.close()}
+    }, [dispatch])
 
    return (
+      <>
+      {
+         auth.user && 
+         <SocketClient />
+      }      
       <NavigationContainer>
          <Stack.Navigator screenOptions={{
             gestureEnabled: true,
@@ -28,6 +41,7 @@ const Routes = () => {
             {(auth.user && auth.access_token) ? AppStackScreen(Stack) : AuthStackScreen(Stack)}
          </Stack.Navigator>
       </NavigationContainer>
+      </>
    )
 }
 

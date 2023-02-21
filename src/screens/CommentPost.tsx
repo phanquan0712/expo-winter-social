@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, ScrollView, FlatList } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, ScrollView, FlatList, SafeAreaView } from 'react-native'
 import HeaderShowTitle from './../components/HeaderShowTitle';
 import { IComment, IPost } from '../utils/TypeScript';
 import { useSelector, useDispatch } from 'react-redux';
@@ -33,7 +33,7 @@ const CommentPost = () => {
    }
 
    return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
          <View style={{
             height: 40,
             display: 'flex',
@@ -120,7 +120,7 @@ const CommentPost = () => {
             setWriteComment={setWriteComment}
             post={postDetail.post}
          />
-      </View>
+      </SafeAreaView>
    )
 }
 

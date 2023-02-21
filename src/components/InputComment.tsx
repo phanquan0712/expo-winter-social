@@ -15,7 +15,7 @@ const InputComment: React.FC<IProps> = ({ writeComment, setWriteComment, post })
 
    const listIcon = ["🙂", "😀", "😄", "😆", "😅", "😂", "🤣", "😊", "😌", "😉", "😏", "😍", "😘", "😗", "😙", "😚", "🤗", "😳", "🙃", "😇", "😈", "😛", "😝", "😜", '😋', '🤤', "🤓", "😎", '🤑', "😠", "😡", "💩", "🎃", "👿", "👍", "👎", "🤞", "👩", "💂", "👳", "👊", "✊", "🙌", "🖖", "👂", "👃", "👁️️", "🎖️️", "🏆️", "🎧️", "🥈️", "🥇️", "🏅"]
 
-   const { auth, commentTag } = useSelector((state: RootStore) => state)
+   const { auth, commentTag, socket } = useSelector((state: RootStore) => state)
    const dispatch = useDispatch<any>()
 
 
@@ -31,7 +31,7 @@ const InputComment: React.FC<IProps> = ({ writeComment, setWriteComment, post })
             reply: [],
             createdAt: new Date().toISOString(),
          }
-         dispatch(createComment(post, newComment as IComment, auth))
+         dispatch(createComment(post, newComment as IComment, auth, socket))
       } else {
          const newAnswerComment = {
             content: writeComment,

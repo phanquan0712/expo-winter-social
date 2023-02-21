@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, Animated, Easing, ScrollView, FlatList } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, Animated, Easing, ScrollView, FlatList , SafeAreaView} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootStore, IUser, IPost } from '../utils/TypeScript'
@@ -72,7 +72,7 @@ const ProfileScreen = () => {
 
 
    return (
-      <View style={[styles.container]}>
+      <SafeAreaView style={[styles.container]}>
          {
             user.load ?
                <Loading />
@@ -135,7 +135,9 @@ const ProfileScreen = () => {
                                  user={user.user}
                               />
                            </View>
-                           <TouchableOpacity style={{ borderRadius: 20, height: 40, width: '46%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row', display: 'flex', backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
+                           <TouchableOpacity style={{ borderRadius: 20, height: 40, width: '46%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row', display: 'flex', backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
+                              onPress={() => navigation.navigate('MessageScreen')}
+                           >
                               <Text style={{ fontSize: 16, fontWeight: '500', marginRight: 10, color: '#000' }}>Message</Text>
                            </TouchableOpacity>
                         </View>
@@ -215,7 +217,7 @@ const ProfileScreen = () => {
                </>
 
          }
-      </View>
+      </SafeAreaView>
    )
 }
 

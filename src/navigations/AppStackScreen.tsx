@@ -1,5 +1,5 @@
 import AppScreen from "../screens/AppScreen"
-import { Settings, EditProfile, CommentPost, Messages, DetailPost, NewPost_Step2Screen, PreviewImage, OtherProfileScreen } from '../screens/index'
+import { Settings, EditProfile, CommentPost, ConverstationsScreen, DetailPost, NewPost_Step2Screen, PreviewImage, OtherProfileScreen, MessageScreen } from '../screens/index'
 import { Easing } from 'react-native'
 import { TransitionSpecs, CardStyleInterpolators } from "@react-navigation/stack";
 
@@ -62,6 +62,7 @@ const customTransition = {
 }
 
 export default function (Stack: any) {
+
    return (
       <>
          <Stack.Screen name="App" component={AppScreen} />
@@ -84,7 +85,7 @@ export default function (Stack: any) {
                useNativeDriver: true,
             }}
          />
-         <Stack.Screen name="Messages" component={Messages} options={{
+         <Stack.Screen name="ConverstationsScreen" component={ConverstationsScreen} options={{
             ...customTransition,
          }} />
          <Stack.Screen name="DetailPost" component={DetailPost}
@@ -110,6 +111,13 @@ export default function (Stack: any) {
             }}
          />
          <Stack.Screen name="OtherProfile" component={OtherProfileScreen}
+            options={{
+               gestureDirection: 'horizontal',
+               cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+               useNativeDriver: true,
+            }}
+         />
+         <Stack.Screen name="MessageScreen" component={MessageScreen}
             options={{
                gestureDirection: 'horizontal',
                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,

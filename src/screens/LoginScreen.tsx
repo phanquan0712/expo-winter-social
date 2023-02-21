@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Animated, Easing, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Animated, Easing, ScrollView, SafeAreaView } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import InputCustom from '../components/InputCustom'

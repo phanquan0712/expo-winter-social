@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView } from 'react-native'
 import { useRoute, useNavigation } from '@react-navigation/native'
 import HeaderShowTitle from '../components/HeaderShowTitle'
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -20,7 +20,7 @@ const DetailPost = () => {
    }, [id, auth.access_token])
 
    return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
          <View style={styles.header}>
             <TouchableOpacity 
                onPress={() => navigation.goBack()}
@@ -44,7 +44,7 @@ const DetailPost = () => {
                handleModal={() => {}}
             />
          }
-      </View>
+      </SafeAreaView>
    )
 }
 

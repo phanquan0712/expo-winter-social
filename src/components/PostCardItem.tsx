@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { Image, StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native'
 import { IPost, IImages } from 'src/utils/TypeScript'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -8,10 +8,12 @@ import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { likePost, unLikePost } from '../redux/actions/postAction';
 import { useNavigation } from '@react-navigation/core';
+import RenderMedia from './RenderMedia';
 interface IProps {
    post: IPost
    handleModal?: (post: IPost) => void
 }
+const width = Dimensions.get('window').width
 const PostCardItem: React.FC<IProps> = ({ post, handleModal }) => {
    const { auth } = useSelector((state: any) => state)
    const carouselRef = React.useRef<any>(null)
@@ -20,7 +22,7 @@ const PostCardItem: React.FC<IProps> = ({ post, handleModal }) => {
    const dispatch = useDispatch<any>()
    const navigation = useNavigation<any>()
    React.useEffect(() => {
-      if (post.likes.find((like: any) => like._id === auth.user._id)) {
+      if (post.likes?.find((like: any) => like._id === auth.user?._id)) {
          setIsLiked(true)
       }
    }, [auth.user, post.likes])
@@ -36,33 +38,22 @@ const PostCardItem: React.FC<IProps> = ({ post, handleModal }) => {
    }
 
    const renderItem = ({ item }: { item: IImages }) => (
-      <>
-         {
-            item.url.includes('/video/i') ?
-               <Video
-                  source={{ uri: item.url as string }}
-                  rate={1.0}
-                  volume={1.0}
-                  isMuted={false}
-                  style={{ height: 400, width: 400, borderColor: '#ddd', borderWidth: 1 }}
-                  shouldPlay={false}
-
-               />
-               :
-               <Image
-                  source={{ uri: item.url as string }}
-                  style={{ height: 400, width: 400, borderColor: '#ddd', borderWidth: 1 }}
-                  resizeMode='cover'
-               />
-         }
-      </>
+      <RenderMedia 
+         media={item.url as string}
+         id={post._id}
+         styleHeight={400}
+         shouldPlay={false}
+         isNavigation={true}
+      />
    )
 
 
    return (
       <View style={{ backgroundColor: 'white' }}>
          <View style={styles.headerPost}>
-            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <TouchableOpacity
+               onPress={() => navigation.navigate('OtherProfile', { id: post.user?._id })}
+            style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                <Image
                   source={{ uri: post.user?.avatar as string }}
                   style={{
@@ -75,7 +66,7 @@ const PostCardItem: React.FC<IProps> = ({ post, handleModal }) => {
                   }}
                />
                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{post.user?.username as string}</Text>
-            </View>
+            </TouchableOpacity>
             <TouchableOpacity>
                <Icon
                   name='ellipsis-v'
@@ -89,9 +80,9 @@ const PostCardItem: React.FC<IProps> = ({ post, handleModal }) => {
             layout={'tinder'}
             data={post.images}
             renderItem={({ item }: any) => renderItem({ item })}
-            sliderWidth={400}
-            itemWidth={400}
-            style={{ height: 400, width: 400 }}
+            sliderWidth={width}
+            itemWidth={width}
+            style={{ height: 400, width: width }}
             onSnapToItem={(activeSlide) => setActiveSlide(activeSlide)}
          />
          <View style={{ paddingHorizontal: 10, paddingBottom: 10 }}>

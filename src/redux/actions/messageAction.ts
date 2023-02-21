@@ -4,26 +4,27 @@ import { ADD_USER, ADD_MESSAGE, GET_MESSAGES, IMessageTypes, IStateType, DELETE_
 import { Dispatch } from "react";
 import { IUser } from "../../utils/Typescript";
 import { ShowError } from '../../utils/ShowMessage';
+import { Socket } from 'socket.io-client';
 
 
 
 
 
-// export const addMessage = (message: IMessage, auth: IAuth, socket: Socket) => async (dispatch: Dispatch<IAlertType | IMessageTypes>) => {
-//    dispatch({ type: ADD_MESSAGE, payload: message });
-//    const newUser = {
-//       _id: auth.user?._id,
-//       username: auth.user?.username,
-//       fullname: auth.user?.fullname,
-//       avatar: auth.user?.avatar,
-//    }
-//    socket.emit('addMessage', {...message, user: { ...newUser }})
-//    try {
-//       await postAPi('message', message, auth.access_token);
-//    } catch (err: any) {
-//       dispatch({ type: ALERT, payload: { error: err.response.data.msg } })
-//    }
-// }
+export const addMessage = (message: IMessage, auth: IAuth, socket: Socket) => async (dispatch: Dispatch<IMessageTypes>) => {
+   dispatch({ type: ADD_MESSAGE, payload: message });
+   const newUser = {
+      _id: auth.user?._id,
+      username: auth.user?.username,
+      fullname: auth.user?.fullname,
+      avatar: auth.user?.avatar,
+   }
+   socket.emit('addMessage', {...message, user: { ...newUser }})
+   try {
+      await postApi('message', message, auth.access_token);
+   } catch (err: any) {
+      return ShowError(err.response.data.msg)
+   }
+}
 
 export const getConversation = (auth: IAuth, page: number = 1) => async (dispatch: Dispatch<IMessageTypes>) => {
    try {

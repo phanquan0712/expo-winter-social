@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, Text, View, Animated, Easing } from 'react-native'
+import { StyleSheet, Text, View, Animated, Easing, SafeAreaView } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import InputCustom from '../components/InputCustom'
 import ButtonWithText from '../components/ButtonWithText'
@@ -76,7 +76,7 @@ const SinUp = () => {
    }
 
    return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
          <StatusBar />
          <LinearGradient
             colors={['#d8c4fc', '#bcc5fc', '#9dc6fc']}
@@ -150,7 +150,7 @@ const SinUp = () => {
                </Text>
             </Animated.View>
          </LinearGradient>
-      </View>
+      </SafeAreaView>
    )
 }
 

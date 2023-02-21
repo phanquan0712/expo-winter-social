@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, Text, View, ScrollView, Image } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, Image, SafeAreaView, TouchableOpacity } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootStore } from '../utils/TypeScript'
 import { getNotifies } from '../redux/actions/notifiesAction'
@@ -7,6 +7,7 @@ import Loading from '../components/Loading'
 import { INotify } from './../redux/types/notifiesType';
 import notifyImage from '../../assets/notify.png'
 import NotifyItem from '../components/NotifyItem'
+import { deleteAllNotify } from '../redux/actions/notifiesAction'
 const NotifycationScreen = () => {
    const { auth, notify } = useSelector((state: RootStore) => state)
    const dispatch = useDispatch<any>()
@@ -17,10 +18,36 @@ const NotifycationScreen = () => {
       }
    }, [auth.access_token, dispatch])
 
+   const handleClearAllNotifies = () => {
+      return dispatch(deleteAllNotify(auth))
+   }
+
    return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
          <View style={styles.header}>
             <Text style={styles.headerText}>Notifies</Text>
+            {
+               notify.data &&
+               notify.data.length > 0 &&               
+               <TouchableOpacity
+                  onPress={handleClearAllNotifies}
+                  style={{
+                     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                     justifyContent: 'center',
+                     alignItems: 'center',
+                     borderRadius: 10,
+                     padding: 8
+                  }}
+               >
+                  <Text
+                     style={{
+                        color: 'white',
+                        fontSize: 16,
+                        fontWeight: '600',
+                     }}
+                  >Clear All</Text>
+               </TouchableOpacity>
+            }
          </View>
          <ScrollView style={{ flex: 1, padding: 16}}>
             {
@@ -45,7 +72,7 @@ const NotifycationScreen = () => {
                </View>
             }
          </ScrollView>
-      </View>
+      </SafeAreaView>
    )
 }
 
@@ -63,7 +90,7 @@ const styles = StyleSheet.create({
       backgroundColor: 'white',
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'flex-start',
+      justifyContent: 'space-between',
       alignItems: 'center'      
    },
    headerText: {

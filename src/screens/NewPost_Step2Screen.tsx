@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, SafeAreaView } from 'react-native'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootStore } from '../utils/TypeScript'
@@ -32,7 +32,7 @@ const NewPost_Step2Screen = () => {
    }
 
    return (
-      <View style={[styles.container]}>
+      <SafeAreaView style={[styles.container]}>
             {/* <HeaderShowTitle
                iconLeft={false}
                title='New Post'
@@ -75,7 +75,7 @@ const NewPost_Step2Screen = () => {
                onChangeText={setCaption}
             />
          </View>
-      </View>
+      </SafeAreaView>
    )
 }
 

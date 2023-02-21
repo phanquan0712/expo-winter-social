@@ -1,11 +1,14 @@
 import * as React from 'react'
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native'
 import { useRoute, useNavigation } from '@react-navigation/native'
 import HeaderShowTitle from '../components/HeaderShowTitle';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { IImages } from '../utils/TypeScript';
 import { Video } from 'expo-av';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+
+const width = Dimensions.get('window').width
+
 const PreviewImage = () => {
    const { images, index } = useRoute<any>().params;
    const navigation = useNavigation<any>()
@@ -17,13 +20,13 @@ const PreviewImage = () => {
             item.url ? 
                <Image
                   source={{ uri: item.url as string}}
-                  style={{ height: 400, width: 400, borderColor: '#ddd', borderWidth: 1 }}
+                  style={{ height: 400, width: width, borderColor: '#ddd', borderWidth: 1 }}
                   resizeMode='cover'
                />
                :
                <Image
                source={{ uri: item as any}}
-               style={{ height: 400, width: 400, borderColor: '#ddd', borderWidth: 1 }}
+               style={{ height: 400, width: width, borderColor: '#ddd', borderWidth: 1 }}
                resizeMode='cover'
             />
          }
@@ -31,7 +34,7 @@ const PreviewImage = () => {
    )
 
    return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
          <View style={styles.header}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
                <Icon 
@@ -49,9 +52,9 @@ const PreviewImage = () => {
             layout={'default'}
             data={images}
             renderItem={({ item }: any) => renderItem({ item })}
-            sliderWidth={400}
-            itemWidth={400}
-            style={{ height: 400, width: 400 }}
+            sliderWidth={width}
+            itemWidth={width}
+            style={{ height: 400, width: width }}
             onSnapToItem={(activeSlide) => setActiveSlide(activeSlide)}
          />
          <View style={{ height: 200, justifyContent: 'center', alignItems: 'center' }}>
@@ -74,7 +77,7 @@ const PreviewImage = () => {
                inactiveDotScale={1}
             />
          </View>
-      </View>
+      </SafeAreaView>
    )
 }
 

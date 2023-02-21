@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput, Alert, ScrollView, ActivityIndicator } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput, Alert, ScrollView, ActivityIndicator, SafeAreaView, StatusBar } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootStore } from '../utils/TypeScript'
@@ -39,85 +39,87 @@ const EditProfile = () => {
    }
 
    return (
-      <ScrollView style={styles.container}>
-         <View style={styles.header}>
-            <TouchableOpacity style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center' }}
-               onPress={() => navigation.goBack()}
-            >
-               <Icon
-                  name='times'
-                  size={25}
-               />
-            </TouchableOpacity>
-            <Text style={{ fontSize: 18, fontWeight: '500', flex: 1 }}>Edit profile</Text>
-            <TouchableOpacity style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center' }}
-               onPress={updateProfile}
-            >
-               {
-                  auth.load ?
-                  <ActivityIndicator size="small" color="#666" />
-                     :
-                     <Icon
-                        name='check'
-                        size={25}
-                        color={'#0095f6'}
-                     />
-               }
-            </TouchableOpacity>
-         </View>
-         <View>
-            <Image
-               source={{ uri: newUser?.avatar }}
-               style={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: 100,
-                  marginBottom: 10,
-                  alignSelf: 'center'
-               }}
-            />
-            <TouchableOpacity onPress={handleChangeImage}>
-               <Text style={{ color: '#0095f6', textAlign: 'center' }}>Edit picture or avatar</Text>
-            </TouchableOpacity>
-         </View>
-         <View>
-            <InputWithLabel
-               label='Name'
-               text={newUser?.fullname}
-               onChangeText={(text) => setNewUser({ ...newUser, fullname: text })}
-            />
-            <InputWithLabel
-               label='Username'
-               text={newUser?.username}
-               onChangeText={(text) => setNewUser({ ...newUser, username: text })}
-            />
-            <InputWithLabel
-               label='Mobile'
-               text={newUser?.mobile}
-               onChangeText={(text) => setNewUser({ ...newUser, mobile: text })}
-            />
-            <InputWithLabel
-               label='Address'
-               text={newUser?.address}
-               onChangeText={(text) => setNewUser({ ...newUser, address: text })}
-            />
-            <InputWithLabel
-               label='Website'
-               text={newUser?.website}
-               onChangeText={(text) => setNewUser({ ...newUser, website: text })}
-            />
-            <View style={{ borderBottomColor: '#ddd', borderBottomWidth: 1, marginVertical: 10, width: '100%' }}>
-               <Text style={{ fontSize: 14, fontWeight: '500', color: '#666' }}>Story</Text>
-               <TextInput
-                  value={newUser?.story}
-                  numberOfLines={5}
-                  multiline={true}
-                  style={{ paddingVertical: 5, fontSize: 16, color: '#000', padding: 5, textAlignVertical: 'top', width: '100%' }}
-                  onChangeText={(text) => setNewUser({ ...newUser, story: text })}
-               />
+      <SafeAreaView style={styles.container}>
+         <ScrollView>
+            <View style={styles.header}>
+               <TouchableOpacity style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center' }}
+                  onPress={() => navigation.goBack()}
+               >
+                  <Icon
+                     name='times'
+                     size={25}
+                  />
+               </TouchableOpacity>
+               <Text style={{ fontSize: 18, fontWeight: '500', flex: 1 }}>Edit profile</Text>
+               <TouchableOpacity style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center' }}
+                  onPress={updateProfile}
+               >
+                  {
+                     auth.load ?
+                        <ActivityIndicator size="small" color="#666" />
+                        :
+                        <Icon
+                           name='check'
+                           size={25}
+                           color={'#0095f6'}
+                        />
+                  }
+               </TouchableOpacity>
             </View>
-         </View>
-      </ScrollView>
+            <View>
+               <Image
+                  source={{ uri: newUser?.avatar }}
+                  style={{
+                     width: 80,
+                     height: 80,
+                     borderRadius: 100,
+                     marginBottom: 10,
+                     alignSelf: 'center'
+                  }}
+               />
+               <TouchableOpacity onPress={handleChangeImage}>
+                  <Text style={{ color: '#0095f6', textAlign: 'center' }}>Edit picture or avatar</Text>
+               </TouchableOpacity>
+            </View>
+            <View>
+               <InputWithLabel
+                  label='Name'
+                  text={newUser?.fullname}
+                  onChangeText={(text) => setNewUser({ ...newUser, fullname: text })}
+               />
+               <InputWithLabel
+                  label='Username'
+                  text={newUser?.username}
+                  onChangeText={(text) => setNewUser({ ...newUser, username: text })}
+               />
+               <InputWithLabel
+                  label='Mobile'
+                  text={newUser?.mobile}
+                  onChangeText={(text) => setNewUser({ ...newUser, mobile: text })}
+               />
+               <InputWithLabel
+                  label='Address'
+                  text={newUser?.address}
+                  onChangeText={(text) => setNewUser({ ...newUser, address: text })}
+               />
+               <InputWithLabel
+                  label='Website'
+                  text={newUser?.website}
+                  onChangeText={(text) => setNewUser({ ...newUser, website: text })}
+               />
+               <View style={{ borderBottomColor: '#ddd', borderBottomWidth: 1, marginVertical: 10, width: '100%' }}>
+                  <Text style={{ fontSize: 14, fontWeight: '500', color: '#666' }}>Story</Text>
+                  <TextInput
+                     value={newUser?.story}
+                     numberOfLines={5}
+                     multiline={true}
+                     style={{ paddingVertical: 5, fontSize: 16, color: '#000', padding: 5, textAlignVertical: 'top', width: '100%' }}
+                     onChangeText={(text) => setNewUser({ ...newUser, story: text })}
+                  />
+               </View>
+            </View>
+         </ScrollView>
+      </SafeAreaView>
    )
 }
 

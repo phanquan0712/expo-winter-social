@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, Animated, Easing, ScrollView, FlatList } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, Animated, Easing, ScrollView, FlatList, SafeAreaView } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootStore, IUser, IPost } from '../utils/TypeScript'
@@ -13,16 +13,14 @@ import ListPostProfileUser from '../components/ListPostProfileUser'
 import { getApi } from '../utils/fetchData'
 import { ShowError } from '../utils/ShowMessage'
 import { getProfileUser } from '../redux/actions/userAction'
+import { getPostProfile , getSavedProfile } from '../redux/actions/proiflePostAction'
 const ProfileScreen = () => {
    const navigation = useNavigation<any>()
    const dispatch = useDispatch<any>()
-   const { auth, discoverPeople } = useSelector((state: RootStore) => state)
+   const { auth, discoverPeople, profilePost } = useSelector((state: RootStore) => state)
    const [typePost, setTypePost] = React.useState<'post' | 'saved'>('post')
    const [modalVisible, setModalVisible] = React.useState(false)
    const [discoverPeopleList, setDiscoverPeopleList] = React.useState<IUser[]>(discoverPeople.users)
-   const [userPost, ] = React.useState<IPost[]>([])
-   const [loadUserSaved, setLoadUserSaved] = React.useState<boolean>(false)
-   const [userSaved, setUserSaved] = React.useState<IPost[]>([])
    const translateBarBot = React.useRef(new Animated.Value(0)).current
    const translateX1 = React.useRef(new Animated.Value(0)).current
    const translateX2 = React.useRef(new Animated.Value(0)).current
@@ -53,28 +51,19 @@ const ProfileScreen = () => {
       }
    }, [auth.user?._id, auth.access_token])
 
+
    React.useEffect(() => {
       if(auth.user?._id && auth.access_token) {
-         if(typePost === 'post') {
+         dispatch(getPostProfile(auth))
+      }  
+   }, [auth])
 
-         } else {
-            const getUserSaved = async () => {
-               try {
-                  setLoadUserSaved(true)
-                  const res = await getApi(`saved_posts`, auth.access_token)
-                  if (res.status === 200) {
-                     setUserSaved(res.data.posts)
-                  }
-                  setLoadUserSaved(false)
-               } catch (err: any) {
-                  setLoadUserSaved(false)
-                  return ShowError(err.response.data.msg)
-               }
-            }
-            getUserSaved()
-         }
-      }
-   }, [auth.access_token, auth.user?._id, typePost])
+   React.useEffect(() => {
+      if(auth.user?._id && auth.access_token) {
+         dispatch(getSavedProfile(auth.access_token))
+      }  
+   }, [auth.access_token])
+
 
 
    React.useEffect(() => {
@@ -155,7 +144,7 @@ const ProfileScreen = () => {
 
 
    return (
-      <View style={[styles.container]}>
+      <SafeAreaView style={[styles.container]}>
          <View style={styles.header}>
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                <Text style={styles.headerText}>{auth.user?.username}</Text>
@@ -266,13 +255,13 @@ const ProfileScreen = () => {
                />
             </View>
             <Animated.View style={[typePost === 'post' ? styles.profilePostActive : styles.profilePost, translateXPost]}>
-               {/* {
-                  user.load ?
+               {
+                  profilePost.load ?
                      <Loading />
                      :
-                     user.posts?.length > 0 ?
+                     profilePost.posts?.length > 0 ?
                         <ListPostProfileUser
-                           posts={user.posts}
+                           posts={profilePost.posts}
                         />
                         :
                         <>
@@ -281,16 +270,16 @@ const ProfileScreen = () => {
                               When you share photos and videos they'll appear on your profile.
                            </Text>
                         </>
-               } */}
+               }
             </Animated.View>
             <Animated.View style={[typePost === 'saved' ? styles.profilePostActive : styles.profilePost, translateXSaved]}>
                {
-                  loadUserSaved ?
+                  profilePost.load ?
                      <Loading />
                      :
-                     userPost.length > 0 ?
+                     profilePost.saved?.length > 0 ?
                         <ListPostProfileUser
-                           posts={userSaved}
+                           posts={profilePost.saved}
                         />
                         :
                         <>
@@ -309,7 +298,7 @@ const ProfileScreen = () => {
             setModalVisible={setModalVisible}
             data={listOptions}
          />
-      </View>
+      </SafeAreaView>
    )
 }
 

@@ -13,18 +13,19 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootStore, IPost } from "../utils/TypeScript";
 import PostCardItem from "../components/PostCardItem";
 import { getPost } from "../redux/actions/postAction";
-import Modal from "../components/Modal";
 import { useNavigation } from "@react-navigation/native";
 import Loading from "../components/Loading";
-import { getApi } from '../utils/fetchData'
-import * as Notifications from 'expo-notifications'
+import { BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import OptionBottomSheet, { IOptionBottomSheetProps } from "../components/OptionBottomSheet";
 const HomeScreen = () => {
   const { auth, post } = useSelector((state: RootStore) => state);
   const dispatch = useDispatch<any>();
   const navigation = useNavigation<any>();
+  const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
+  const snapPoints = React.useMemo(() => ['50%', '75%'], [])
   const [modalVisible, setModalVisible] = React.useState<boolean>(false);
   const [page, setPage] = React.useState<number>(1);
-  const listOptions: any[] = [
+  const listOptions: IOptionBottomSheetProps[] = [
     {
       icon: "link",
       title: "Copy Link",
@@ -43,7 +44,7 @@ const HomeScreen = () => {
     },
     {
       icon: "star",
-      title: "ADd to favorites",
+      title: "Add to favorites",
     },
     {
       icon: "flag",
@@ -75,10 +76,7 @@ const HomeScreen = () => {
 
 
   const handleModal = (post: IPost) => {
-    if (!modalVisible) {
-      setModalVisible(true);
-    }
-    console.log(post);
+    bottomSheetModalRef.current?.present();
   };
 
   const handleLoadMore = async () => {
@@ -88,80 +86,106 @@ const HomeScreen = () => {
 
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Winter</Text>
-        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <TouchableOpacity style={{ width: 40, alignItems: 'center', justifyContent: 'center' }}
-            onPress={() => navigation.navigate('ConverstationsScreen')}
-          >
-            <Icon name="facebook-messenger" size={20} color="#000" />
-          </TouchableOpacity>
-        </View>
-      </View>
-      {
-        post.load ?
-          <Loading />
-          :
-          post.posts?.length > 0 ?
-            <ScrollView
-              style={{
-                flex: 1,
-                width: "100%",
-              }}
+    <BottomSheetModalProvider>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Winter</Text>
+          <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+            <TouchableOpacity style={{ width: 40, alignItems: 'center', justifyContent: 'center' }}
+              onPress={() => navigation.navigate('ConverstationsScreen')}
             >
-              {
-                post.posts?.length > 0 &&
-                post.posts?.map(item => (
-                  <PostCardItem
-                    post={item}
-                    key={item._id}
-                    handleModal={handleModal}
-                  />
-                ))
-              }
-              <TouchableOpacity
-                onPress={handleLoadMore}
+              <Icon name="facebook-messenger" size={20} color="#000" />
+            </TouchableOpacity>
+          </View>
+        </View>
+        {
+          post.load ?
+            <Loading />
+            :
+            post.posts?.length > 0 ?
+              <ScrollView
                 style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: 40,
-                  width: 100,
-                  backgroundColor: '#3ab1da',
-                  alignSelf: 'center',
-                  marginBottom: 20,
-                  borderRadius: 10
+                  flex: 1,
+                  width: "100%",
                 }}
               >
                 {
-                  post.isLoadMore ?
-                    <ActivityIndicator size="small" color="#666" />
-                    :
-                    <Text style={{
-                      fontSize: 16,
-                      color: 'white',
-                      fontWeight: '500',
-                    }}>Load more</Text>
+                  post.posts?.length > 0 &&
+                  post.posts?.map(item => (
+                    <PostCardItem
+                      post={item}
+                      key={item._id}
+                      handleModal={handleModal}
+                    />
+                  ))
                 }
-              </TouchableOpacity>
-            </ScrollView>
-            :
-            <Text style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: '#000',
-              textAlign: 'center',
-              marginTop: 20
+                <TouchableOpacity
+                  onPress={handleLoadMore}
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: 40,
+                    width: 100,
+                    backgroundColor: '#3ab1da',
+                    alignSelf: 'center',
+                    marginBottom: 20,
+                    borderRadius: 10
+                  }}
+                >
+                  {
+                    post.isLoadMore ?
+                      <ActivityIndicator size="small" color="#666" />
+                      :
+                      <Text style={{
+                        fontSize: 16,
+                        color: 'white',
+                        fontWeight: '500',
+                      }}>Load more</Text>
+                  }
+                </TouchableOpacity>
+              </ScrollView>
+              :
+              <Text style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: '#000',
+                textAlign: 'center',
+                marginTop: 20
+              }}>
+                No Post
+              </Text>
+        }
+      </SafeAreaView>
+      <BottomSheetModal
+            ref={bottomSheetModalRef}
+            index={0}
+            snapPoints={snapPoints}
+            style={{
+               shadowColor: '#000',
+               shadowOffset: {
+                  width: 0,
+                  height: 3
+               },
+               shadowRadius: 6,
+               shadowOpacity: 1.0,
+            }}
+         >
+            <View style={{ 
+               flex: 1,
+               paddingHorizontal: 20,
             }}>
-              No Post
-            </Text>
-      }
-      <Modal
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        data={listOptions}
-      />
-    </SafeAreaView>
+               {
+                  listOptions.map((item, index) => (
+                     <OptionBottomSheet 
+                        key={index}
+                        icon={item.icon}
+                        title={item.title}
+                     />
+                  ))
+               }
+            </View>
+         </BottomSheetModal>
+    </BottomSheetModalProvider>
   );
 };
 

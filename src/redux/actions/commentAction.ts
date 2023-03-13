@@ -74,7 +74,7 @@ export const createComment = (post: IPost, comment: IComment, auth: IAuth, socke
    }
 }
 
-export const createAnswerComment = (post: IPost, comment: IComment, answerComment: IComment, auth: IAuth) => async (dispatch: Dispatch<IGetDetailPostType | ICommentType>) => {
+export const createAnswerComment = (post: IPost, comment: IComment, answerComment: IComment, auth: IAuth, socket: Socket) => async (dispatch: Dispatch<IGetDetailPostType | ICommentType>) => {
    try {
       const res = await postApi(`comment/${comment._id}/answer`, {
          postId: post._id,
@@ -97,6 +97,17 @@ export const createAnswerComment = (post: IPost, comment: IComment, answerCommen
          ...post,
          comments: CommentPost.map(item => item._id === comment._id ? newDataComment : item)
       }
+
+      const msg = {
+         id: res.data.newComment._id,
+         text: 'mentioned you in a comment',
+         recipients: [post.user],
+         url: `/posts/${post._id}`,
+         content: post.content,
+         image: post.images[0].url
+      }
+
+      dispatch((createNotify(msg, auth, socket) as any))
       dispatch({ type: GET_POST_DETAIL, payload: newPost as IPost})
    } catch (err: any) {
       return ShowError(err.response.data.msg)

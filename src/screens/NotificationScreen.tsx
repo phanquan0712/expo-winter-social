@@ -49,7 +49,7 @@ const NotifycationScreen = () => {
                </TouchableOpacity>
             }
          </View>
-         <ScrollView style={{ flex: 1, padding: 16}}>
+         <ScrollView style={{ flex: 1}}>
             {
                notify.load ? 
                <Loading />

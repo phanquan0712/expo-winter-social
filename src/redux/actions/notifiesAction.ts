@@ -40,10 +40,10 @@ export const getNotifies = (token: string) => async(dispatch: Dispatch<INotifyTy
    }
 }
 
-export const isReadNotify = (item: INotify, auth: IAuth) => async(dispatch: Dispatch<INotifyType>) => {
+export const isReadNotify = (item: INotify, token: string) => async(dispatch: Dispatch<INotifyType>) => {
    try {
       dispatch({ type: UPDATE_NOTIFY, payload: { ...item, isRead: true }})
-      await patchApi(`isReadNotify/${item._id}`, {}, auth.access_token)
+      await patchApi(`isReadNotify/${item._id}`, {}, token)
    } catch(err: any) {
       return ShowError(err.response.data.msg)
    }

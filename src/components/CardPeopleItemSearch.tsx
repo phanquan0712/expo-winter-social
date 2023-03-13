@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
+import { useSelector } from 'react-redux'
+import { RootStore } from '../utils/TypeScript'
 interface IProps {
     avatar: string,
     username: string,
@@ -9,9 +11,14 @@ interface IProps {
  }
 const CardPeopleItemSearch: React.FC<IProps> = ({ avatar, username, fullname, _id }) => {
     const navigation = useNavigation<any>()
+    const { auth } = useSelector((state: RootStore) => state)
+    const handleNavigationToOtherProfile = () => {
+        if(_id === auth.user?._id) return navigation.navigate('Profile')
+        return navigation.navigate('OtherProfile', { id: _id })
+    }
     return (
         <TouchableOpacity style={styles.card}
-            onPress={() => navigation.navigate('OtherProfile', { id: _id })}
+            onPress={handleNavigationToOtherProfile}
         >
             <Image 
                 source={{ uri: avatar }}

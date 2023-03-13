@@ -1,4 +1,4 @@
-import { ADD_USER, GET_MESSAGES, CHECK_USER_ONLINE, DELETE_CONVERSATION, ADD_MESSAGE, DELETE_MESSAGE, GET_CONVERSATION, IMessageTypes, IStateType, GET_CONVERSATION_LOAD, GET_MESSAGES_LOAD } from "../types/messageType";
+import { ADD_USER, GET_MESSAGES, CHECK_USER_ONLINE, DELETE_CONVERSATION, ADD_MESSAGE, DELETE_MESSAGE, GET_CONVERSATION, IMessageTypes, IStateType, GET_CONVERSATION_LOAD, GET_MESSAGES_LOAD, DELETE_ALL_MESSAGE } from "../types/messageType";
 
 
 const initState: IStateType = {
@@ -24,7 +24,7 @@ const messageReducer = (state: IStateType = initState, action: IMessageTypes) =>
             loadMessage: action.payload
          }
       case ADD_USER:
-         if(state.users.every(item => item._id !== action.payload._id)) {
+         if (state.users.every(item => item._id !== action.payload._id)) {
             return {
                ...state,
                users: [action.payload, ...state.users],
@@ -43,16 +43,16 @@ const messageReducer = (state: IStateType = initState, action: IMessageTypes) =>
          }
       case GET_CONVERSATION:
          return {
-            ...state,
+            ...state, 
             users: action.payload.users,
             totalUser: action.payload.total,
-            firstLoad: true
          }
       case GET_MESSAGES:
          return {
             ...state,
-            data: action.payload.messages ? action.payload.messages.reverse() : [],
+            data: [...action.payload.messages.reverse(), ...state.data],
             totalData: action.payload.total,
+            firstLoad: true
          }
       case DELETE_MESSAGE:
          return {
@@ -75,6 +75,12 @@ const messageReducer = (state: IStateType = initState, action: IMessageTypes) =>
                action.payload.includes(user._id) ? { ...user, online: true }
                   : { ...user, online: false }
             ))
+         }
+      case DELETE_ALL_MESSAGE:
+         return {
+            ...state,
+            data: [],
+            firstLoad: false,
          }
       default:
          return state;

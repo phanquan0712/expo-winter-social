@@ -103,3 +103,10 @@ export interface IComment {
    user: IUser
    createdAt: string
 }
+
+export interface IUserCard {
+   _id: string
+   avatar: string
+   fullname: string
+   username: string
+}

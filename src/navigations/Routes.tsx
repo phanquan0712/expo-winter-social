@@ -9,7 +9,7 @@ import { refreshToken } from "../redux/actions/authAction"
 import { Easing } from 'react-native';
 import io from "socket.io-client"
 import { SOCKET } from "../redux/types/socketType";
-import { API_URL } from '../utils/config'
+import { API_URL } from '../utils/fetchData'
 import SocketClient from '../../SocketClient'
 const Stack = createStackNavigator()
 

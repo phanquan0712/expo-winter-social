@@ -10,6 +10,8 @@ import { getApi } from "../utils/fetchData";
 import { ShowError } from "../utils/ShowMessage";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import CardPeopleItemSearch from "../components/CardPeopleItemSearch";
+import CardItemMessage from "../components/CardItemMessage";
+import { IUserMessage } from "src/redux/types/messageType";
 interface IState {
   avatar: string,
   username: string,
@@ -124,6 +126,18 @@ const Messages = () => {
           {
             message.loadConversation ?
               <Loading />
+              :
+              message.users?.length > 0 ?
+              <ScrollView style={{ flex: 1, paddingVertical: 10, borderColor: '#ddd', borderTopWidth: 1}}>
+                  {
+                    message.users?.map((item: IUserMessage) => (
+                      <CardItemMessage 
+                        key={item._id}
+                        userMessage={item}
+                      />
+                    ))
+                  }
+              </ScrollView>
               :
               <View style={{
                 flex: 1, 

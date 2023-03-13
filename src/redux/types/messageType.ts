@@ -11,7 +11,7 @@ export const GET_MESSAGES_LOAD = 'GET_MESSAGES_LOAD';
 export const DELETE_MESSAGE = 'DELETE_MESSAGE';
 export const DELETE_CONVERSATION = 'DELETE_CONVERSATION'
 export const CHECK_USER_ONLINE = 'CHECK_USER_ONLINE';
-
+export const DELETE_ALL_MESSAGE = 'DELETE_ALL_MESSAGE';
 
 export interface IConversationLoadType {
    type: typeof GET_CONVERSATION_LOAD;
@@ -100,5 +100,9 @@ export interface ICheckUserOnlineType {
    payload: string[]
 }
 
+export interface IDeleteAllMessageType {
+   type: typeof DELETE_ALL_MESSAGE;
+}
 
-export type IMessageTypes = ICheckUserOnlineType | IAddUserType | IAddMessageType |  IGetConversationType | IGetMessageType | IDeleteMessageType | IDeleteConversationType | IConversationLoadType | IMessageLoadType; 
+
+export type IMessageTypes = ICheckUserOnlineType | IAddUserType | IAddMessageType |  IGetConversationType | IGetMessageType | IDeleteMessageType | IDeleteConversationType | IConversationLoadType | IMessageLoadType | IDeleteAllMessageType 

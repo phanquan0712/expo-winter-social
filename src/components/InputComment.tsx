@@ -41,7 +41,7 @@ const InputComment: React.FC<IProps> = ({ writeComment, setWriteComment, post })
             user: auth.user,
             createdAt: new Date().toISOString(),
          }
-         dispatch(createAnswerComment(post, commentTag, newAnswerComment, auth))
+         dispatch(createAnswerComment(post, commentTag, newAnswerComment, auth, socket))
          dispatch({ type: TAG_ANSWER_COMMENT, payload: {} as IComment})
       }
       setWriteComment('')

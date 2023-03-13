@@ -3,17 +3,16 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, Animated, 
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootStore, IUser, IPost } from '../utils/TypeScript'
-import ModalProfile from '../components/ModalProfile'
 import { useNavigation } from '@react-navigation/native'
 import { getDiscoverPeople } from '../redux/actions/discoverPeopleAction'
 import PeopleCardItem from '../components/PeopleCardItem'
 import Modal from '../components/Modal'
 import Loading from '../components/Loading'
 import ListPostProfileUser from '../components/ListPostProfileUser'
-import { getApi } from '../utils/fetchData'
-import { ShowError } from '../utils/ShowMessage'
 import { getProfileUser } from '../redux/actions/userAction'
 import { getPostProfile , getSavedProfile } from '../redux/actions/proiflePostAction'
+import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
+import OptionBottomSheet, { IOptionBottomSheetProps } from '../components/OptionBottomSheet'
 const ProfileScreen = () => {
    const navigation = useNavigation<any>()
    const dispatch = useDispatch<any>()
@@ -24,8 +23,12 @@ const ProfileScreen = () => {
    const translateBarBot = React.useRef(new Animated.Value(0)).current
    const translateX1 = React.useRef(new Animated.Value(0)).current
    const translateX2 = React.useRef(new Animated.Value(0)).current
+   const bottomSheetModalRef = React.useRef<any>(null)
+   const snapPoints = React.useMemo(() => ['50%', '75%'], [])
 
-   const listOptions: any[] = [
+
+
+   const listOptions: IOptionBottomSheetProps[] = [
       {
          icon: 'cog',
          title: 'Settings'
@@ -78,12 +81,12 @@ const ProfileScreen = () => {
       }
    }, [discoverPeople.users])
 
-   React.useEffect(() => {
-      if (modalVisible) {
-         navigation.setOptions({ tabBarStyle: { display: 'none' }, tabBarVisible: false });
-         return () => navigation.setOptions({ tabBarStyle: undefined, tabBarVisible: undefined });
-      }
-   }, [navigation, modalVisible])
+   // React.useEffect(() => {
+   //    if (modalVisible) {
+   //       navigation.setOptions({ tabBarStyle: { display: 'none' }, tabBarVisible: false });
+   //       return () => navigation.setOptions({ tabBarStyle: undefined, tabBarVisible: undefined });
+   //    }
+   // }, [navigation, modalVisible])
 
 
    React.useEffect(() => {
@@ -114,11 +117,11 @@ const ProfileScreen = () => {
       }).start()
    }, [typePost])
 
-   const handleOpenModal = () => {
-      if (!modalVisible) {
-         setModalVisible(true)
-      }
-   }
+   // const handleOpenModal = () => {
+   //    if (!modalVisible) {
+   //       setModalVisible(true)
+   //    }
+   // }
    const translateXPost = {
       transform: [
          {
@@ -135,170 +138,199 @@ const ProfileScreen = () => {
       ]
    }
 
-   const handleDeleteDiscoverPeople = (id: string) => {
-      const newList = discoverPeopleList.filter((item: any) => item._id !== id)
-      setDiscoverPeopleList(newList)
+   const handlePresentModal  = () => {
+      bottomSheetModalRef.current?.present()
    }
+   console.log(bottomSheetModalRef.current);
+   
+   
 
 
 
 
    return (
-      <SafeAreaView style={[styles.container]}>
-         <View style={styles.header}>
-            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-               <Text style={styles.headerText}>{auth.user?.username}</Text>
-               <Icon
-                  name='chevron-down'
-                  size={15}
-                  color='#000'
-                  style={{ marginLeft: 5, marginTop: 5 }}
-               />
-            </View>
-            <View>
-               <TouchableOpacity
-                  onPress={handleOpenModal}
-               >
+      <BottomSheetModalProvider>
+         <SafeAreaView style={[styles.container, {
+         }]}>
+            <View style={styles.header}>
+               <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={styles.headerText}>{auth.user?.username}</Text>
                   <Icon
-                     name='bars'
-                     size={20}
+                     name='chevron-down'
+                     size={15}
                      color='#000'
+                     style={{ marginLeft: 5, marginTop: 5 }}
                   />
-               </TouchableOpacity>
-            </View>
-         </View>
-         <ScrollView style={{ flexGrow: 1, backgroundColor: 'white' }}>
-            <View style={{ padding: 20, backgroundColor: 'white' }}>
-               <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10 }}>
-                  <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', marginRight: 20, alignItems: 'center' }}>
-                     <Image
-                        source={{ uri: auth.user?.avatar }}
-                        style={{ width: 70, height: 70, borderRadius: 50 }}
+               </View>
+               <View>
+                  <TouchableOpacity
+                     onPress={handlePresentModal}
+                  >
+                     <Icon
+                        name='bars'
+                        size={20}
+                        color='#000'
                      />
-                     <Text>{auth.user?.fullname}</Text>
-                  </View>
-                  <View style={{ flex: 1, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                     <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{auth.user?.followers?.length}</Text>
-                        <Text style={{ fontSize: 14 }}>Followers</Text>
-                     </View>
-                     <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{auth.user?.following?.length}</Text>
-                        <Text style={{ fontSize: 14 }}>Following</Text>
-                     </View>
-                  </View>
+                  </TouchableOpacity>
                </View>
-               <View style={{ padding: 5, backgroundColor: '#ddd', borderRadius: 5, marginBottom: 20 }}>
-                  <Text style={{ fontSize: 14, color: '#333' }}>{auth.user?.story}</Text>
-               </View>
-               <TouchableOpacity style={styles.btnEdit}
-                  onPress={() => navigation.navigate('EditProfile')}
-               >
-                  <Text style={styles.textBtnEdit}>Edit Profile</Text>
-               </TouchableOpacity>
             </View>
-            {
-               discoverPeople.load ?
-               <Loading />
-               :
-                  <FlatList
-                     data={discoverPeopleList}
-                     keyExtractor={(item, index) => item._id.toString()}
-                     renderItem={({ item }) => (
-                        <PeopleCardItem
-                           key={item._id}
-                           user={item}
+            <ScrollView style={{ flexGrow: 1, }}>
+               <View style={{ padding: 20, backgroundColor: 'white' }}>
+                  <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10 }}>
+                     <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', marginRight: 20, alignItems: 'center' }}>
+                        <Image
+                           source={{ uri: auth.user?.avatar }}
+                           style={{ width: 70, height: 70, borderRadius: 50 }}
                         />
-                     )}
-                     horizontal
-                     style={{ backgroundColor: 'white', marginVertical: 10 }}
-                     showsHorizontalScrollIndicator={false}
-                  />
-            }
-            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', backgroundColor: 'white' }}>
-               <TouchableOpacity style={{
-                  flex: 1, alignItems: 'center', justifyContent: 'center',
-                  opacity: typePost === 'post' ? 1 : 0.3
-               }}
-                  onPress={() => setTypePost('post')}
-               >
-                  <Icon
-                     name='th'
-                     size={20}
-                     color='#000'
-                     style={{ padding: 10 }}
-                  />
-               </TouchableOpacity>
-               <TouchableOpacity style={{
-                  flex: 1, alignItems: 'center', justifyContent: 'center',
-                  opacity: typePost === 'saved' ? 1 : 0.3
-               }}
-                  onPress={() => setTypePost('saved')}
-               >
-                  <Icon
-                     name='user'
-                     size={20}
-                     color='#000'
-                     style={{ padding: 10 }}
-                  />
-               </TouchableOpacity>
-               <Animated.View
-                  style={{
-                     position: 'absolute',
-                     bottom: 0,
-                     left: 0,
-                     transform: [{ translateX: translateBarBot }],
-                     width: '50%',
-                     height: 1,
-                     backgroundColor: '#000',
+                        <Text>{auth.user?.fullname}</Text>
+                     </View>
+                     <View style={{ flex: 1, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                           <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{auth.user?.followers?.length}</Text>
+                           <Text style={{ fontSize: 14 }}>Followers</Text>
+                        </View>
+                        <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                           <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{auth.user?.following?.length}</Text>
+                           <Text style={{ fontSize: 14 }}>Following</Text>
+                        </View>
+                     </View>
+                  </View>
+                  <View style={{ padding: 5, backgroundColor: '#ddd', borderRadius: 5, marginBottom: 20 }}>
+                     <Text style={{ fontSize: 14, color: '#333' }}>{auth.user?.story}</Text>
+                  </View>
+                  <TouchableOpacity style={styles.btnEdit}
+                     onPress={() => navigation.navigate('EditProfile')}
+                  >
+                     <Text style={styles.textBtnEdit}>Edit Profile</Text>
+                  </TouchableOpacity>
+               </View>
+               {
+                  discoverPeople.load ?
+                     <Loading />
+                     :
+                     <FlatList
+                        data={discoverPeopleList}
+                        keyExtractor={(item, index) => item._id.toString()}
+                        renderItem={({ item }) => (
+                           <PeopleCardItem
+                              key={item._id}
+                              user={item}
+                           />
+                        )}
+                        horizontal
+                        style={{ backgroundColor: 'white', marginVertical: 10 }}
+                        showsHorizontalScrollIndicator={false}
+                     />
+               }
+               <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', backgroundColor: 'white' }}>
+                  <TouchableOpacity style={{
+                     flex: 1, alignItems: 'center', justifyContent: 'center',
+                     opacity: typePost === 'post' ? 1 : 0.3
                   }}
-               />
+                     onPress={() => setTypePost('post')}
+                  >
+                     <Icon
+                        name='th'
+                        size={20}
+                        color='#000'
+                        style={{ padding: 10 }}
+                     />
+                  </TouchableOpacity>
+                  <TouchableOpacity style={{
+                     flex: 1, alignItems: 'center', justifyContent: 'center',
+                     opacity: typePost === 'saved' ? 1 : 0.3
+                  }}
+                     onPress={() => setTypePost('saved')}
+                  >
+                     <Icon
+                        name='user'
+                        size={20}
+                        color='#000'
+                        style={{ padding: 10 }}
+                     />
+                  </TouchableOpacity>
+                  <Animated.View
+                     style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        transform: [{ translateX: translateBarBot }],
+                        width: '50%',
+                        height: 1,
+                        backgroundColor: '#000',
+                     }}
+                  />
+               </View>
+               <Animated.View style={[typePost === 'post' ? styles.profilePostActive : styles.profilePost, translateXPost]}>
+                  {
+                     profilePost.load ?
+                        <Loading />
+                        :
+                        profilePost.posts?.length > 0 ?
+                           <ListPostProfileUser
+                              posts={profilePost.posts}
+                           />
+                           :
+                           <>
+                              <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>Profile</Text>
+                              <Text style={{ fontSize: 16, fontWeight: '300', textAlign: 'center' }}>
+                                 When you share photos and videos they'll appear on your profile.
+                              </Text>
+                           </>
+                  }
+               </Animated.View>
+               <Animated.View style={[typePost === 'saved' ? styles.profilePostActive : styles.profilePost, translateXSaved]}>
+                  {
+                     profilePost.load ?
+                        <Loading />
+                        :
+                        profilePost.saved?.length > 0 ?
+                           <ListPostProfileUser
+                              posts={profilePost.saved}
+                           />
+                           :
+                           <>
+                              <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>
+                                 Photo and videos of you
+                              </Text>
+                              <Text style={{ fontSize: 16, fontWeight: '300', textAlign: 'center' }}>
+                                 When people tag you in photos and videos they'll appear here.
+                              </Text>
+                           </>
+                  }
+               </Animated.View>
+            </ScrollView>
+         </SafeAreaView>
+         <BottomSheetModal
+            ref={bottomSheetModalRef}
+            index={0}
+            snapPoints={snapPoints}
+            style={{
+               shadowColor: '#000',
+               shadowOffset: {
+                  width: 0,
+                  height: 3
+               },
+               shadowRadius: 6,
+               shadowOpacity: 1.0,
+            }}
+         >
+            <View style={{ 
+               flex: 1,
+               paddingHorizontal: 20,
+            }}>
+               {
+                  listOptions.map((item, index) => (
+                     <OptionBottomSheet 
+                        key={index}
+                        icon={item.icon}
+                        title={item.title}
+                     />
+                  ))
+               }
             </View>
-            <Animated.View style={[typePost === 'post' ? styles.profilePostActive : styles.profilePost, translateXPost]}>
-               {
-                  profilePost.load ?
-                     <Loading />
-                     :
-                     profilePost.posts?.length > 0 ?
-                        <ListPostProfileUser
-                           posts={profilePost.posts}
-                        />
-                        :
-                        <>
-                           <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>Profile</Text>
-                           <Text style={{ fontSize: 16, fontWeight: '300', textAlign: 'center' }}>
-                              When you share photos and videos they'll appear on your profile.
-                           </Text>
-                        </>
-               }
-            </Animated.View>
-            <Animated.View style={[typePost === 'saved' ? styles.profilePostActive : styles.profilePost, translateXSaved]}>
-               {
-                  profilePost.load ?
-                     <Loading />
-                     :
-                     profilePost.saved?.length > 0 ?
-                        <ListPostProfileUser
-                           posts={profilePost.saved}
-                        />
-                        :
-                        <>
-                           <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>
-                              Photo and videos of you
-                           </Text>
-                           <Text style={{ fontSize: 16, fontWeight: '300', textAlign: 'center' }}>
-                              When people tag you in photos and videos they'll appear here.
-                           </Text>
-                        </>
-               }
-            </Animated.View>
-         </ScrollView>
-         <Modal
-            modalVisible={modalVisible}
-            setModalVisible={setModalVisible}
-            data={listOptions}
-         />
-      </SafeAreaView>
+         </BottomSheetModal>
+      </BottomSheetModalProvider>
    )
 }
 
@@ -307,6 +339,7 @@ export default ProfileScreen
 const styles = StyleSheet.create({
    container: {
       flex: 1,
+
    },
    header: {
       height: 50,
@@ -334,15 +367,6 @@ const styles = StyleSheet.create({
    textBtnEdit: {
       fontSize: 14,
       color: '#000'
-   },
-   modalSheet: {
-      flex: 1,
-      height: Dimensions.get('window').height,
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
    },
    profilePostActive: {
       flex: 1,

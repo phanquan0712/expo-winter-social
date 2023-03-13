@@ -1,10 +1,9 @@
 import axios from 'axios';
-const API_URL = 'http://192.168.110.102:5000';
+export const API_URL = 'http://192.168.110.106:5000';
 
 
 export const postApi = async(url: string, post: object, token?: string ) => {
-   const res = await axios.post( `${API_URL}/api/${url}`, post, {
-      headers: { Authorization: token}
+   const res = await axios.post( `${API_URL}/api/${url}`, post, {      headers: { Authorization: token} 
    })
    return res;
 }

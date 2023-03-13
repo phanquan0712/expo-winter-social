@@ -113,33 +113,10 @@ const SocketClient = () => {
 
    // Notification
    useEffect(() => {
-      console.log('test before');
-      
       if(!socket) return;
-      console.log('test after');
-      
       socket.on('createNotifyToClient', (data: any) => {
          dispatch({ type: CREATE_NOTIFY, payload: data })
-         async function sendPushNotification(token: string) {
-            const message = {
-               to: token,
-               sound: 'default',
-               title: 'Original Title',
-               body: 'And here is the body!',
-               data: { someData: 'goes here' },
-            };
-
-            await fetch('https://exp.host/--/api/v2/push/send', {
-               method: 'POST',
-               headers: {
-                  Accept: 'application/json',
-                  'Accept-encoding': 'gzip, deflate',
-                  'Content-Type': 'application/json',
-               },
-               body: JSON.stringify(message),
-            });
-         }
-         sendPushNotification(token)
+         console.log('createNotifyToClient', data);
       })
 
       return () => socket.off('createNotifyToClient')

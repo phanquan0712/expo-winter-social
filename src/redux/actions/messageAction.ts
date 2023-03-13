@@ -30,6 +30,7 @@ export const getConversation = (auth: IAuth, page: number = 1) => async (dispatc
    try {
       dispatch({ type: GET_CONVERSATION_LOAD, payload: true})
       const res = await getApi(`conversations?limit=${page * 9}`, auth.access_token);
+      
       let newArr: any[] = [];
       (res.data.conversations as any[]).forEach(item => {
          (item.recipients as any[]).forEach(cv => {
@@ -48,8 +49,11 @@ export const getConversation = (auth: IAuth, page: number = 1) => async (dispatc
 export const getMessages = (id: string, auth: IAuth, page: number = 1) => async (dispatch: Dispatch<IMessageTypes>) => {
    try {
       dispatch({ type: GET_MESSAGES_LOAD, payload: true})
-      const res = await getApi(`messages/${id}?limit=${page * 3}`, auth.access_token);
-      dispatch({ type: GET_MESSAGES, payload: res.data })
+      const res = await getApi(`messages/${id}?limit=${9}&page=${page}`, auth.access_token);
+      dispatch({ type: GET_MESSAGES, payload: {
+         messages: res.data.messages,
+         total: res.data.total,
+      } })
       dispatch({ type: GET_MESSAGES_LOAD, payload: false})
    } catch (err: any) {
       return ShowError(err.response.data.msg)

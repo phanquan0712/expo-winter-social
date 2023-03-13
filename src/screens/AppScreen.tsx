@@ -10,7 +10,6 @@ import { useRoute,  useIsFocused } from '@react-navigation/native'
 
 const AppScreen = () => {
    const { auth } = useSelector((state: RootStore) => state)
-   console.log(useIsFocused());
    const screenOptions = ({ route }: any) => ({
       headerShown: false,
       gestureEnabled: true,

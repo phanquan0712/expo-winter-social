@@ -69,8 +69,6 @@ const ProfileScreen = () => {
       ]
    }
 
-
-
    return (
       <SafeAreaView style={[styles.container]}>
          {
@@ -136,7 +134,13 @@ const ProfileScreen = () => {
                               />
                            </View>
                            <TouchableOpacity style={{ borderRadius: 20, height: 40, width: '46%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row', display: 'flex', backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
-                              onPress={() => navigation.navigate('MessageScreen')}
+                              onPress={() => navigation.navigate('MessageScreen', { userMessage: {
+                                 _id: user.user?._id,
+                                 avatar: user.user?.avatar,
+                                 fullname: user.user?.fullname,
+                                 username: user.user?.username,
+                                 online: false,
+                              } })}
                            >
                               <Text style={{ fontSize: 16, fontWeight: '500', marginRight: 10, color: '#000' }}>Message</Text>
                            </TouchableOpacity>

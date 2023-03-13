@@ -9,15 +9,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { likePost, unLikePost } from '../redux/actions/postAction';
 import { useNavigation } from '@react-navigation/core';
 import RenderMedia from './RenderMedia';
+import { savePost, unSavePost } from '../redux/actions/postAction';
 interface IProps {
    post: IPost
-   handleModal?: (post: IPost) => void
+   handleModal: (post: IPost) => void
 }
 const width = Dimensions.get('window').width
 const PostCardItem: React.FC<IProps> = ({ post, handleModal }) => {
-   const { auth } = useSelector((state: any) => state)
+   const { auth, socket } = useSelector((state: any) => state)
    const carouselRef = React.useRef<any>(null)
    const [activeSlide, setActiveSlide] = React.useState<number>(0)
+   const [isSaved, setIsSaved] = React.useState<boolean>(false)
    const [isLiked, setIsLiked] = React.useState<boolean>(false)
    const dispatch = useDispatch<any>()
    const navigation = useNavigation<any>()
@@ -27,12 +29,18 @@ const PostCardItem: React.FC<IProps> = ({ post, handleModal }) => {
       }
    }, [auth.user, post.likes])
 
+   React.useEffect(() => {
+      if(auth.user.saved?.find((save: string) => save === post._id)) {
+         setIsSaved(true)
+      }
+   },[auth.user, post])
+
 
    const handleLike = () => {
       if (isLiked) {
          dispatch(unLikePost(post, auth ))
       } else {
-         dispatch(likePost(post, auth ))
+         dispatch(likePost(post, auth, socket))
       }
       setIsLiked(!isLiked)
    }
@@ -47,12 +55,28 @@ const PostCardItem: React.FC<IProps> = ({ post, handleModal }) => {
       />
    )
 
+   const handleNavigationProfile = () => {
+      if(post.user?._id === auth.user?._id) {
+         return navigation.navigate('Profile')
+      }
+      return navigation.navigate('OtherProfile', { id: post.user?._id })
+   }
+
+   const handleBookmark = () => {
+      if(isSaved) {
+         dispatch(unSavePost(post, auth))
+      } else {
+         dispatch(savePost(post, auth))
+      }
+      setIsSaved(!isSaved)
+   }
+
 
    return (
       <View style={{ backgroundColor: 'white' }}>
          <View style={styles.headerPost}>
             <TouchableOpacity
-               onPress={() => navigation.navigate('OtherProfile', { id: post.user?._id })}
+               onPress={handleNavigationProfile}
             style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                <Image
                   source={{ uri: post.user?.avatar as string }}
@@ -67,7 +91,9 @@ const PostCardItem: React.FC<IProps> = ({ post, handleModal }) => {
                />
                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{post.user?.username as string}</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+               onPress={() => handleModal(post)}
+            >
                <Icon
                   name='ellipsis-v'
                   size={18}
@@ -139,12 +165,23 @@ const PostCardItem: React.FC<IProps> = ({ post, handleModal }) => {
                   inactiveDotColor="#999"
                   inactiveDotScale={1}
                />
-               <TouchableOpacity>
-                  <Icon
-                     name='bookmark'
-                     size={20}
-                     color='#333'
-                  />
+               <TouchableOpacity
+                  onPress={handleBookmark}
+               >
+                  {
+                     isSaved ? 
+                     <Icon 
+                           name='bookmark'
+                           size={20}
+                           color='red'
+                     />
+                     :
+                     <Icon 
+                        name='bookmark'
+                        size={20}
+                        color='#333'
+                     />
+                  }
                </TouchableOpacity>
             </View>
             <View style={{ paddingVertical: 5 }}>

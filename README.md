@@ -29,31 +29,31 @@ Discover new content and users through the Explore feature.
 
 ### Home Feed
 
-![Home Feed](screenshots/home_feed.png)
+![Home Feed](assets/home.png)
 
 The Home Feed screen displays a scrollable feed of posts from friends and accounts followed. Users can engage with posts by liking and commenting.
 
 ### Post Creation
 
-![Post Creation](screenshots/post_creation.png)
+![Post Creation](assets/uploadimage1.png)
 
 The Post Creation screen allows users to upload images, add captions, and share their moments with the community.
 
 ### Profile
 
-![Profile](screenshots/profile.png)
+![Profile](assets/profile.png)
 
 The Profile screen showcases the user's profile, including their posts, followers, and following. Users can customize their profile picture and bio.
 
 ### Notifications
 
-![Notifications](screenshots/notifications.png)
+![Notifications](assets/notify.png)
 
 The Notifications screen keeps users informed about likes, comments, and new followers, enhancing the social experience.
 
 ### Explore
 
-![Explore](screenshots/explore.png)
+![Explore](assets/discovery.png)
 
 The Explore screen enables users to discover new content and users, expanding their social network.
 

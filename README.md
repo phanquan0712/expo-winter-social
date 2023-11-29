@@ -1,64 +1,33 @@
 # SocialApp
 
-SocialApp is a social networking application built using React Native Expo. It aims to provide a user-friendly and visually appealing platform for users to connect and share moments.
+SocialApp is a social networking application built with React Native Expo on the client side and Node.js, Express.js, and MongoDB on the server side. TypeScript is used throughout the project to enhance code quality and maintainability. Real-time communication is facilitated by Socket.IO.
 
-## Features
 
-### 1. User Authentication
-Users can sign up, log in, and securely authenticate their identity.
+## Technologies Used
 
-### 2. Feed
-Scroll through a personalized feed of posts from friends and accounts followed.
+| **Client Side**                                 | **Server Side**                                 |
+|--------------------------------------------------|-------------------------------------------------|
+| [Expo](https://docs.expo.dev/)                   | [Node.js](https://nodejs.org/)                  |
+| [React Native](https://reactnative.dev/)         | [Express.js](https://expressjs.com/)            |
+| [Redux](https://redux.js.org/)                   | [MongoDB](https://www.mongodb.com/)             |
+| [TypeScript](https://www.typescriptlang.org/)    | [TypeScript](https://www.typescriptlang.org/)  |
+| [Socket.IO](https://socket.io/)                  | [Socket.IO](https://socket.io/)                 |
 
-### 3. Post Creation
-Create and share posts with images and captions.
+#  Screens
 
-### 4. Likes and Comments
-Engage with posts through likes and comments, fostering interaction within the community.
+| Screen          | Description                                                                         | Screenshot                                     |
+|-----------------|-------------------------------------------------------------------------------------|------------------------------------------------|
+| Welcome         | Provides a warm introduction to new users, inviting them to explore the app or log in. | ![Welcome](assets/welcome.png)                 |
+| Login           | Allows users to securely log into their accounts, providing a smooth authentication process. | ![Login](assets/login.png)                     |
+| Signup          | Enables new users to create accounts and join the SocialApp community.                 | ![Signup](assets/signup.png)                   |
+| Home            | Scroll through a personalized feed of posts from friends and accounts followed.             | ![Post](assets/home.png)                       |
+| Comment         | Allows users to view and add comments to a specific post, fostering engagement and interaction. | ![Comment](assets/comment.png)              |
+| Discovery       | Combines both "Explore" and "Search User," allowing users to discover new content and find/connect with other users. | ![Discovery](assets/discovery.png) ![SeachUser](assets/seachuser.png)       |
+| Upload Image    | Enables users to select and upload images when creating a new post.                    | ![Upload Image](assets/uploadimage1.png)      |
+| Write Content   | Lets users add captions and text content when creating a new post.                     | ![Write Content](assets/write_content.png)   |
+| Notification    | Keeps users informed about likes, comments, and new followers, enhancing the social experience. | ![Notification](assets/notify.png) |
+| Profile         | Showcases the user's profile, including posts, followers, and customization options.  | ![Profile](assets/profile.png)                 |
 
-### 5. Profile
-View and edit user profiles, including profile pictures and bio.
+<!-- Include additional screens as needed -->
 
-### 6. Notifications
-Receive notifications for likes, comments, and new followers.
 
-### 7. Explore
-Discover new content and users through the Explore feature.
-
-## Screens
-
-### Home Feed
-
-![Home Feed](assets/home.png)
-
-The Home Feed screen displays a scrollable feed of posts from friends and accounts followed. Users can engage with posts by liking and commenting.
-
-### Post Creation
-
-![Post Creation](assets/uploadimage1.png)
-
-The Post Creation screen allows users to upload images, add captions, and share their moments with the community.
-
-### Profile
-
-![Profile](assets/profile.png)
-
-The Profile screen showcases the user's profile, including their posts, followers, and following. Users can customize their profile picture and bio.
-
-### Notifications
-
-![Notifications](assets/notify.png)
-
-The Notifications screen keeps users informed about likes, comments, and new followers, enhancing the social experience.
-
-### Explore
-
-![Explore](assets/discovery.png)
-
-The Explore screen enables users to discover new content and users, expanding their social network.
-
-## Getting Started
-
-1. Clone the repository.
-   ```bash
-   git clone https://github.com/your-username/social-app.git

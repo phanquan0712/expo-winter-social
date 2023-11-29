@@ -17,8 +17,8 @@ SocialApp is a social networking application built with React Native Expo on the
 
 | Screen          | Description                                                                         | Screenshot                                     |
 |-----------------|-------------------------------------------------------------------------------------|------------------------------------------------|
-| Welcome         | Provides a warm introduction to new users, inviting them to explore the app or log in. | ![Welcome](assets/welcome.png)                 |
-| Login           | Allows users to securely log into their accounts, providing a smooth authentication process. | ![Login](assets/login.png)                     |
+| Welcome         | Provides a warm introduction to new users, inviting them to explore the app or log in. | [![Welcome](assets/welcome.png)](https://www.youtube.com/watch?v=your_welcome_video_id)                 |
+| Login           | Allows users to securely log into their accounts, providing a smooth authentication process. | [![Login](assets/login.png)](https://www.youtube.com/watch?v=vqdm-3hcmjA) |
 | Signup          | Enables new users to create accounts and join the SocialApp community.                 | ![Signup](assets/signup.png)                   |
 | Home            | Scroll through a personalized feed of posts from friends and accounts followed.             | ![Post](assets/home.png)                       |
 | Comment         | Allows users to view and add comments to a specific post, fostering engagement and interaction. | ![Comment](assets/comment.png)              |
